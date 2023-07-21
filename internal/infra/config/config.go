@@ -27,7 +27,7 @@ type Config struct {
 const prefix = "tinyurl_"
 
 // New reads configuration with koanf.
-func Provide() Config {
+func Provide() (logger.Config, db.Config, telemetry.Config) {
 	k := koanf.New(".")
 
 	// load default configuration from default function
@@ -72,5 +72,5 @@ func Provide() Config {
 ======================================================
 	`, string(indent))
 
-	return instance
+	return instance.Logger, instance.Database, instance.Telemetry
 }
