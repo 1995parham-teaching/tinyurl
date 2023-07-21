@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/1989michael/tinyurl/internal/infra/db"
+	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 )
 
@@ -11,6 +12,9 @@ import (
 // nolint: gomnd
 func Default() Config {
 	return Config{
+		Logger: logger.Config{
+			Level: "debug",
+		},
 		Database: db.Config{
 			DSN:             "postgresql://tinyurl:secret@localhost/tinyurl",
 			Debug:           true,

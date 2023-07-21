@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/1989michael/tinyurl/internal/infra/db"
+	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/env"
@@ -17,6 +18,7 @@ import (
 
 // Config holds all configurations.
 type Config struct {
+	Logger    logger.Config    `json:"logger,omitempty"    koanf:"logger"`
 	Database  db.Config        `json:"database,omitempty"  koanf:"database"`
 	Telemetry telemetry.Config `json:"telemetry,omitempty" koanf:"telemetry"`
 }
@@ -25,7 +27,7 @@ type Config struct {
 const prefix = "tinyurl_"
 
 // New reads configuration with koanf.
-func New() *Config {
+func Provide() Config {
 	k := koanf.New(".")
 
 	// load default configuration from default function
@@ -70,5 +72,5 @@ func New() *Config {
 ======================================================
 	`, string(indent))
 
-	return &instance
+	return instance
 }
