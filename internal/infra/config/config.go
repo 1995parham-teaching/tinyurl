@@ -7,7 +7,6 @@ import (
 
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
@@ -18,8 +17,8 @@ import (
 
 // Config holds all configurations.
 type Config struct {
-	Database  db.Config        `koanf:"database" json:"database,omitempty"`
-	Telemetry telemetry.Config `koanf:"telemetry" json:"telemetry,omitempty"`
+	Database  db.Config        `json:"database,omitempty"  koanf:"database"`
+	Telemetry telemetry.Config `json:"telemetry,omitempty" koanf:"telemetry"`
 }
 
 // prefix indicates environment variables prefix.
