@@ -14,6 +14,7 @@ type DB struct {
 }
 
 func New(cfg Config) (*DB, error) {
+	// nolint: exhaustruct
 	db, err := gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{
 		PrepareStmt: true,
 	})
@@ -31,5 +32,5 @@ func New(cfg Config) (*DB, error) {
 	sqlDB.SetConnMaxIdleTime(cfg.ConnMaxIdleTime)
 	sqlDB.SetConnMaxLifetime(cfg.ConnMaxLifetime)
 
-	return &DB{DB: db, SQL: sqlDB}, err
+	return &DB{DB: db, SQL: sqlDB}, nil
 }
