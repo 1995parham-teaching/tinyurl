@@ -10,6 +10,7 @@ I want in this project select some of these ways and shows how their end is look
 - Logging with [zap](https://github.com/uber-go/zap)
 - Metrics with [otel](https://github.com/open-telemetry/opentelemetry-go)
 - Tracing with [otel](https://github.com/open-telemetry/opentelemetry-go)
+- Dependency Injection using [fx](https://github.com/uber-go/fx)
 
 ## Packing
 
