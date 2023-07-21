@@ -11,3 +11,10 @@ I want in this project select some of these ways and shows how their end is look
 - Metrics with [otel](https://github.com/open-telemetry/opentelemetry-go)
 - Tracing with [otel](https://github.com/open-telemetry/opentelemetry-go)
 - Dependency Injection with [wire](https://github.com/google/wire)
+
+## Packing
+
+I am following the rules defined by [golang-standard](https://github.com/golang-standards/project-layout).
+The `internal/domain` package contains the domain-specific logics. As rule of thumbs everything defined in
+`internal/domain` must use only go standard packages or other application packages, so they should use any third party
+libraries directly.
