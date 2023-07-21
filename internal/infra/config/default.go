@@ -6,12 +6,14 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
+	"go.uber.org/fx"
 )
 
 // Default return default configuration.
 // nolint: gomnd
 func Default() Config {
 	return Config{
+		Out: fx.Out{},
 		Logger: logger.Config{
 			Level: "debug",
 		},

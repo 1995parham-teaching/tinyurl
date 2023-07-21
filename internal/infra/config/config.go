@@ -14,10 +14,13 @@ import (
 	"github.com/knadh/koanf/providers/structs"
 	"github.com/knadh/koanf/v2"
 	"github.com/tidwall/pretty"
+	"go.uber.org/fx"
 )
 
 // Config holds all configurations.
 type Config struct {
+	fx.Out
+
 	Logger    logger.Config    `json:"logger,omitempty"    koanf:"logger"`
 	Database  db.Config        `json:"database,omitempty"  koanf:"database"`
 	Telemetry telemetry.Config `json:"telemetry,omitempty" koanf:"telemetry"`
@@ -27,7 +30,7 @@ type Config struct {
 const prefix = "tinyurl_"
 
 // New reads configuration with koanf.
-func Provide() (logger.Config, db.Config, telemetry.Config) {
+func Provide() Config {
 	k := koanf.New(".")
 
 	// load default configuration from default function
@@ -72,5 +75,5 @@ func Provide() (logger.Config, db.Config, telemetry.Config) {
 ======================================================
 	`, string(indent))
 
-	return instance.Logger, instance.Database, instance.Telemetry
+	return instance
 }
