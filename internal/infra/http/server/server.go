@@ -6,18 +6,25 @@ import (
 	"net/http"
 
 	"github.com/1989michael/tinyurl/internal/infra/http/handler"
+	"github.com/1989michael/tinyurl/internal/infra/service"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
-func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery) *echo.Echo {
+func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc *service.URLSvc) *echo.Echo {
 	app := echo.New()
 
 	handler.Healthz{
 		Logger: logger.Named("handler").Named("healthz"),
 		Tracer: tele.TraceProvider.Tracer("handler.healthz"),
+	}.Register(app.Group(""))
+
+	handler.URL{
+		Logger: logger.Named("handler").Named("healthz"),
+		Tracer: tele.TraceProvider.Tracer("handler.healthz"),
+		Store:  urlSvc,
 	}.Register(app.Group(""))
 
 	lc.Append(fx.Hook{
