@@ -74,9 +74,20 @@ func setupMeterExporter(cfg Config) (metric.Reader, *http.Server) {
 	srv.Handle("/metrics", promhttp.Handler())
 
 	return exporter, &http.Server{
-		Addr:              cfg.Meter.Address,
-		Handler:           srv,
-		ReadHeaderTimeout: time.Second,
+		Addr:                         cfg.Meter.Address,
+		Handler:                      srv,
+		DisableGeneralOptionsHandler: false,
+		TLSConfig:                    nil,
+		ReadTimeout:                  time.Second,
+		ReadHeaderTimeout:            time.Second,
+		WriteTimeout:                 time.Second,
+		IdleTimeout:                  time.Second,
+		MaxHeaderBytes:               0,
+		TLSNextProto:                 nil,
+		ConnState:                    nil,
+		ErrorLog:                     nil,
+		BaseContext:                  nil,
+		ConnContext:                  nil,
 	}
 }
 
