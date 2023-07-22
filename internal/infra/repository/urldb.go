@@ -15,7 +15,7 @@ type URLDB struct {
 	db *db.DB
 }
 
-func NewURLDB(db *db.DB) *URLDB {
+func ProvideURLDB(db *db.DB) *URLDB {
 	return &URLDB{
 		db: db,
 	}
