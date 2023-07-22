@@ -32,7 +32,7 @@ seed $tinyurl_telemetry__meter__enabled="false": (dev "up")
     go run ./cmd/tinyurl/main.go seed
 
 # connect into the dev environment database
-database: (dev "up") (dev "exec" "database psql tinyurl")
+database: (dev "up") (dev "exec" "database psql postgresql://tinyurl:secret@localhost/tinyurl")
 
 # run golangci-lint
 lint *flags:
