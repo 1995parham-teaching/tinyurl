@@ -7,7 +7,10 @@ import (
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
 )
 
-var ErrURLNotFound = errors.New("url does not exist")
+var (
+	ErrURLNotFound       = errors.New("url does not exist")
+	ErrDuplicateShortURL = errors.New("short url already exists")
+)
 
 type Repository interface {
 	Create(context.Context, url.URL) error
