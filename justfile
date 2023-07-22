@@ -35,5 +35,5 @@ seed $tinyurl_telemetry__meter__enabled="false": (dev "up")
 database: (dev "up") (dev "exec" "database psql tinyurl")
 
 # run golangci-lint
-lint:
-    golangci-lint run -c .golangci.yml
+lint *flags:
+    golangci-lint run -c .golangci.yml {{ flags }}
