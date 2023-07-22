@@ -7,6 +7,7 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/http/server"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/repository"
+	"github.com/1989michael/tinyurl/internal/infra/service"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
@@ -40,6 +41,7 @@ func Register(
 					fx.WithLogger(func(logger *zap.Logger) fxevent.Logger {
 						return &fxevent.ZapLogger{Logger: logger}
 					}),
+					fx.Provide(service.ProvideURLSvc),
 					fx.Provide(server.Provide),
 					fx.Invoke(main),
 				).Run()
