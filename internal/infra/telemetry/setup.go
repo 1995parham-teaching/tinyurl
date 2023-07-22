@@ -91,7 +91,7 @@ func setupMeterExporter(cfg Config) (metric.Reader, *http.Server) {
 	}
 }
 
-func Prvoide(lc fx.Lifecycle, cfg Config) Telemetery {
+func Provide(lc fx.Lifecycle, cfg Config) Telemetery {
 	reader, srv := setupMeterExporter(cfg)
 	exporter := setupTraceExporter(cfg)
 
