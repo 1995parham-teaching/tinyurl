@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/1989michael/tinyurl/internal/cmd/migrate"
+	"github.com/1989michael/tinyurl/internal/cmd/seed"
 	"github.com/1989michael/tinyurl/internal/cmd/server"
 	"github.com/carlmjohnson/versioninfo"
 	"github.com/spf13/cobra"
@@ -23,6 +25,8 @@ func Execute() {
 	}
 
 	server.Register(root)
+	migrate.Register(root)
+	seed.Register(root)
 
 	if err := root.Execute(); err != nil {
 		log.Printf("failed to execute root command %s", err)
