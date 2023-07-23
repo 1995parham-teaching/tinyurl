@@ -14,7 +14,7 @@ dev cmd *flags:
     #!/usr/bin/env bash
     set -euxo pipefail
     if [ {{ cmd }} = 'down' ]; then
-      docker compose -f ./deployments/docker-compose.yml down
+      docker compose -f ./deployments/docker-compose.yml down --remove-orphans
       docker compose -f ./deployments/docker-compose.yml rm
     elif [ {{ cmd }} = 'up' ]; then
       docker compose -f ./deployments/docker-compose.yml up -d {{ flags }}
