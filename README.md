@@ -16,5 +16,8 @@ I want in this project select some of these ways and shows how their end is look
 
 I am following the rules defined by [golang-standard](https://github.com/golang-standards/project-layout).
 The `internal/domain` package contains the domain-specific logics. As rule of thumbs everything defined in
-`internal/domain` must use only go standard packages or other application packages, so they should use any third party
+`internal/domain` must use only go standard packages or other application packages, so they should not use any third party
 libraries directly.
+
+The infrastructure layer do the actuall using of third party libraries and resides in `infra` package.
+Actual implementation always go into the `infra` package.
