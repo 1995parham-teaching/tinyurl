@@ -1,13 +1,13 @@
 package server
 
 import (
-	"github.com/1989michael/tinyurl/internal/domain/repourl"
+	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
+	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
 	"github.com/1989michael/tinyurl/internal/infra/config"
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/http/server"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/repository"
-	"github.com/1989michael/tinyurl/internal/infra/service"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
@@ -36,12 +36,12 @@ func Register(
 					fx.Provide(telemetry.Provide),
 					fx.Provide(db.Provide),
 					fx.Provide(
-						fx.Annotate(repository.ProvideURLDB, fx.As(new(repourl.Repository))),
+						fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 					),
 					fx.WithLogger(func(logger *zap.Logger) fxevent.Logger {
 						return &fxevent.ZapLogger{Logger: logger}
 					}),
-					fx.Provide(service.ProvideURLSvc),
+					fx.Provide(urlsvc.ProvideURLSvc),
 					fx.Provide(server.Provide),
 					fx.Invoke(main),
 				).Run()

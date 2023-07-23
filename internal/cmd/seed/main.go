@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
-	"github.com/1989michael/tinyurl/internal/domain/repourl"
+	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
 	"github.com/1989michael/tinyurl/internal/infra/config"
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func main(logger *zap.Logger, repo repourl.Repository, shutdowner fx.Shutdowner) {
+func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner) {
 	ctx := context.Background()
 
 	records := []url.URL{
@@ -56,7 +56,7 @@ func Register(root *cobra.Command) {
 					fx.Provide(logger.Provide),
 					fx.Provide(db.Provide),
 					fx.Provide(
-						fx.Annotate(repository.ProvideURLDB, fx.As(new(repourl.Repository))),
+						fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 					),
 					fx.NopLogger,
 					fx.Invoke(main),

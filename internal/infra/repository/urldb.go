@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
-	"github.com/1989michael/tinyurl/internal/domain/repourl"
+	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"gorm.io/gorm"
 )
@@ -34,10 +34,10 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 
 	if err := r.db.DB.WithContext(ctx).Where("key = ?", key).First(&url).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return url, repourl.ErrURLNotFound
+			return url, urlrepo.ErrURLNotFound
 		}
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return url, repourl.ErrDuplicateShortURL
+			return url, urlrepo.ErrDuplicateShortURL
 		}
 
 		return url, fmt.Errorf("fetching url from database failed %w", err)

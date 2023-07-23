@@ -2,14 +2,13 @@ package urlsvc
 
 import (
 	"context"
-	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/big"
 	"time"
 
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
 	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
+	"github.com/1989michael/tinyurl/internal/infra/generator"
 	"go.uber.org/zap"
 )
 
@@ -19,29 +18,10 @@ var (
 	ErrURLNotFound      = urlrepo.ErrURLNotFound
 )
 
-// shortURLKey generates a random key from the source characters.
-func shortURLKey() string {
-	const (
-		length = 6
-		source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-	)
-
-	b := make([]byte, length)
-	for i := range b {
-		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(source))))
-		if err != nil {
-			panic(err)
-		}
-
-		b[i] = source[n.Int64()]
-	}
-
-	return string(b)
-}
-
 type URLSvc struct {
 	repo   urlrepo.Repository
 	logger *zap.Logger
+	gen    generator.Generator
 }
 
 func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger) *URLSvc {
@@ -67,7 +47,7 @@ func (s *URLSvc) create(ctx context.Context, key string, address string, expire 
 }
 
 func (s *URLSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
-	key := shortURLKey()
+	key := s.gen.ShortURLKey()
 
 	if err := s.create(ctx, key, address, expire); err != nil {
 		if errors.Is(err, urlrepo.ErrDuplicateShortURL) {

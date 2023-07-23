@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
 	"github.com/1989michael/tinyurl/internal/infra/http/request"
-	"github.com/1989michael/tinyurl/internal/infra/service"
 	"github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -15,7 +15,7 @@ import (
 
 // URL handles interaction with URLs.
 type URL struct {
-	Store  *service.URLSvc
+	Store  *urlsvc.URLSvc
 	Logger *zap.Logger
 	Tracer trace.Tracer
 }
@@ -48,7 +48,7 @@ func (h URL) Create(c echo.Context) error {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, err.Error())
 
-			if errors.Is(err, service.ErrKeyAlreadyExists) {
+			if errors.Is(err, urlsvc.ErrKeyAlreadyExists) {
 				return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 			}
 

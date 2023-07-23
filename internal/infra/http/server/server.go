@@ -5,15 +5,15 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
 	"github.com/1989michael/tinyurl/internal/infra/http/handler"
-	"github.com/1989michael/tinyurl/internal/infra/service"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
-func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc *service.URLSvc) *echo.Echo {
+func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc *urlsvc.URLSvc) *echo.Echo {
 	app := echo.New()
 
 	handler.Healthz{
