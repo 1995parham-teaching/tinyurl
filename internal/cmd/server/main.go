@@ -5,6 +5,7 @@ import (
 	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
 	"github.com/1989michael/tinyurl/internal/infra/config"
 	"github.com/1989michael/tinyurl/internal/infra/db"
+	"github.com/1989michael/tinyurl/internal/infra/generator"
 	"github.com/1989michael/tinyurl/internal/infra/http/server"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/repository"
@@ -35,6 +36,7 @@ func Register(
 					fx.Provide(logger.Provide),
 					fx.Provide(telemetry.Provide),
 					fx.Provide(db.Provide),
+					fx.Provide(generator.Provide),
 					fx.Provide(
 						fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 					),

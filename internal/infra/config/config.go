@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/1989michael/tinyurl/internal/infra/db"
+	"github.com/1989michael/tinyurl/internal/infra/generator"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/knadh/koanf/parsers/toml"
@@ -22,6 +23,7 @@ type Config struct {
 	fx.Out
 
 	Logger    logger.Config    `json:"logger,omitempty"    koanf:"logger"`
+	Generator generator.Config `json:"generator,omitempty" koanf:"generator"`
 	Database  db.Config        `json:"database,omitempty"  koanf:"database"`
 	Telemetry telemetry.Config `json:"telemetry,omitempty" koanf:"telemetry"`
 }
