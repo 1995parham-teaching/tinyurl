@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/1989michael/tinyurl/internal/infra/db"
+	"github.com/1989michael/tinyurl/internal/infra/generator"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"go.uber.org/fx"
@@ -14,6 +15,9 @@ import (
 func Default() Config {
 	return Config{
 		Out: fx.Out{},
+		Generator: generator.Config{
+			Type: "simple",
+		},
 		Logger: logger.Config{
 			Level: "debug",
 		},

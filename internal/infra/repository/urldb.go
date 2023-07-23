@@ -36,6 +36,7 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return url, urlrepo.ErrURLNotFound
 		}
+
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			return url, urlrepo.ErrDuplicateShortURL
 		}

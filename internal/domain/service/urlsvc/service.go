@@ -24,14 +24,16 @@ type URLSvc struct {
 	gen    generator.Generator
 }
 
-func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger) *URLSvc {
+func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Generator) *URLSvc {
 	return &URLSvc{
+		gen:    gen,
 		repo:   repo,
 		logger: logger.Named("urlsvc"),
 	}
 }
 
 func (s *URLSvc) create(ctx context.Context, key string, address string, expire *time.Time) error {
+	// nolint exhaustruct
 	url := url.URL{
 		Key:    key,
 		URL:    address,
@@ -91,6 +93,7 @@ func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
 		if errors.Is(err, urlrepo.ErrURLNotFound) {
 			return url, ErrURLNotFound
 		}
+
 		return url, fmt.Errorf("url fetching failed %w", err)
 	}
 
@@ -103,7 +106,9 @@ func (s *URLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 		return url, err
 	}
 
-	url.Visits += 1
+	// we can use transaction here but number of visits is not accurate number.
+	url.Visits++
+
 	if err := s.repo.Update(ctx, url); err != nil {
 		s.logger.Error("updating url visit coount failed", zap.Error(err))
 	}

@@ -1,5 +1,5 @@
 package generator
 
 type Config struct {
-	Type string
+	Type string `json:"type,omitempty" koanf:"type"`
 }

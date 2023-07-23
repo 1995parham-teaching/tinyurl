@@ -15,3 +15,8 @@ linters:
     - golint
     - interfacer
     - exhaustivestruct
+    - deadcode
+    - varcheck
+    - nosnakecase
+    - ifshort
+    - structcheck

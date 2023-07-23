@@ -21,6 +21,7 @@ type URL struct {
 }
 
 // Create generates short URL and save it on database.
+// nolint: wrapcheck
 func (h URL) Create(c echo.Context) error {
 	ctx, span := h.Tracer.Start(c.Request().Context(), "handler.url.create")
 	defer span.End()
@@ -70,6 +71,7 @@ func (h URL) Create(c echo.Context) error {
 }
 
 // Retrieve retrieves URL for given short URL and redirect to it.
+// nolint: wrapcheck
 func (h URL) Retrieve(c echo.Context) error {
 	ctx, span := h.Tracer.Start(c.Request().Context(), "handler.url.retrieve")
 	defer span.End()

@@ -37,9 +37,7 @@ func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, url
 
 			return nil
 		},
-		OnStop: func(ctx context.Context) error {
-			return app.Shutdown(ctx)
-		},
+		OnStop: app.Shutdown,
 	})
 
 	return app
