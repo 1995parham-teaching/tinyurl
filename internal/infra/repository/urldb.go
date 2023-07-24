@@ -75,7 +75,7 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 		ctx,
 		time.Since(start).Seconds(),
 		metric.WithAttributes(
-			attribute.String(logtag.Operation, "create"),
+			attribute.String(logtag.Operation, "from-short-url"),
 		),
 	)
 
@@ -93,7 +93,7 @@ func (r *URLDB) Update(ctx context.Context, url url.URL) error {
 		ctx,
 		time.Since(start).Seconds(),
 		metric.WithAttributes(
-			attribute.String(logtag.Operation, "create"),
+			attribute.String(logtag.Operation, "update"),
 		),
 	)
 
