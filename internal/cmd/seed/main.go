@@ -2,6 +2,7 @@ package seed
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
@@ -10,6 +11,7 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/repository"
+	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -36,6 +38,10 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 
 	for _, record := range records {
 		if err := repo.Create(ctx, record); err != nil {
+			if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
+				continue
+			}
+
 			logger.Fatal("cannot create record", zap.Error(err))
 		}
 	}
@@ -55,6 +61,7 @@ func Register(root *cobra.Command) {
 					fx.Provide(config.Provide),
 					fx.Provide(logger.Provide),
 					fx.Provide(db.Provide),
+					fx.Provide(telemetry.ProvideNull),
 					fx.Provide(
 						fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 					),
