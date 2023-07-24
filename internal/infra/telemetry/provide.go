@@ -22,14 +22,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-type Telemetery struct {
-	serviceName   string
-	namespace     string
-	metricSrv     *http.Server
-	TraceProvider *trace.TracerProvider
-	MeterProvider *metric.MeterProvider
-}
-
 func setupTraceExporter(cfg Config) trace.SpanExporter {
 	if !cfg.Trace.Enabled {
 		exporter, err := stdouttrace.New(
@@ -152,14 +144,6 @@ func (t Telemetery) run(_ context.Context) error {
 func (t Telemetery) shutdown(ctx context.Context) error {
 	if err := t.metricSrv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("cannot shutdown the metric server %w", err)
-	}
-
-	if err := t.MeterProvider.Shutdown(ctx); err != nil {
-		return fmt.Errorf("cannot shutdown the meter provider: %w", err)
-	}
-
-	if err := t.TraceProvider.Shutdown(ctx); err != nil {
-		return fmt.Errorf("cannot shutdown the trace provider: %w", err)
 	}
 
 	return nil
