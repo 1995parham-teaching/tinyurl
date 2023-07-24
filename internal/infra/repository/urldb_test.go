@@ -10,6 +10,7 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/db"
 	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/1989michael/tinyurl/internal/infra/repository"
+	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
@@ -34,6 +35,7 @@ func (s *URLDBTestSuite) SetupSuite() {
 		fx.Provide(config.Provide),
 		fx.Provide(logger.Provide),
 		fx.Provide(db.Provide),
+		fx.Provide(telemetry.ProvideNull),
 		fx.Provide(
 			fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 		),
