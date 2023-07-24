@@ -44,16 +44,24 @@ func (s *URLDBTestSuite) TestCreate() {
 	s.Invoke(s.testCreate)
 }
 
-func (s *URLDBTestSuite) testCreate(db urlrepo.Repository) {
+func (s *URLDBTestSuite) testCreate(repo urlrepo.Repository, db *db.DB) {
 	require := s.Require()
 
 	// nolint: exhaustruct
-	require.NoError(db.Create(context.Background(), url.URL{
+	require.NoError(repo.Create(context.Background(), url.URL{
 		Key:    "static_random",
 		URL:    "https://github.com",
 		Visits: 0,
 		Expire: nil,
 	}))
+
+	// nolint: exhaustruct
+	url, err := repo.FromShortURL(context.Background(), "static_random")
+	require.NoError(err)
+
+	require.Equal(url.URL, "https://github.com")
+
+	require.NoError(db.DB.Where("key = ?", "static_random").Delete(&url).Error)
 }
 
 func TestURLDB(t *testing.T) {
