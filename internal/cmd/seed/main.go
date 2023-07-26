@@ -15,7 +15,6 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
 
 func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner) {
@@ -29,10 +28,6 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 			Expire:    nil,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
-			DeletedAt: gorm.DeletedAt{
-				Time:  time.Now(),
-				Valid: false,
-			},
 		},
 	}
 

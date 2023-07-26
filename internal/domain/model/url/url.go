@@ -2,8 +2,6 @@ package url
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type URL struct {
@@ -14,5 +12,4 @@ type URL struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
