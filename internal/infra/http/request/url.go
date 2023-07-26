@@ -15,11 +15,13 @@ type URL struct {
 	Expire *time.Time `json:"expire"`
 }
 
+const minExpirationDuration = 30 * time.Minute
+
 // Validate URL request.
 func (r URL) Validate() error {
 	if err := validation.ValidateStruct(&r,
 		validation.Field(&r.URL, validation.Required, is.RequestURI),
-		validation.Field(&r.Expire, validation.Min(time.Now())),
+		validation.Field(&r.Expire, validation.Min(time.Now().Add(minExpirationDuration))),
 	); err != nil {
 		return fmt.Errorf("url request validation failed: %w", err)
 	}

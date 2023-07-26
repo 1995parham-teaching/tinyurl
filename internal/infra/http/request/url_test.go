@@ -39,6 +39,11 @@ func TestURLValidation(t *testing.T) {
 		{
 			url:     "http://www.hello.com",
 			expire:  time.Now().Add(time.Second),
+			isValid: false,
+		},
+		{
+			url:     "http://www.hello.com",
+			expire:  time.Now().Add(time.Hour),
 			isValid: true,
 		},
 		{
