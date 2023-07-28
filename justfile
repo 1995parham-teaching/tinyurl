@@ -23,11 +23,11 @@ dev cmd *flags:
     fi
 
 # run tests in the dev environment
-test $tinyurl_telemetry__meter__enabled="false": (dev "up")
+test: (dev "up")
     just seed
     go test -v ./... -covermode=atomic -coverprofile=coverage.out
 
-seed $tinyurl_telemetry__meter__enabled="false": (dev "up")
+seed: (dev "up")
     go run ./cmd/tinyurl/main.go migrate
     go run ./cmd/tinyurl/main.go seed
 

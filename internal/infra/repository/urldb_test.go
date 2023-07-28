@@ -18,20 +18,15 @@ import (
 
 type URLDBTestSuite struct {
 	suite.Suite
-	options []fx.Option
-}
 
-func (s *URLDBTestSuite) Invoke(f any) {
-	options := []fx.Option{
-		fx.Invoke(f),
-	}
-	options = append(options, s.options...)
+	repo urlrepo.Repository
+	db   *db.DB
 
-	fxtest.New(s.T(), options...).RequireStart().RequireStop()
+	app *fxtest.App
 }
 
 func (s *URLDBTestSuite) SetupSuite() {
-	s.options = []fx.Option{
+	s.app = fxtest.New(s.T(),
 		fx.Provide(config.Provide),
 		fx.Provide(logger.Provide),
 		fx.Provide(db.Provide),
@@ -39,18 +34,24 @@ func (s *URLDBTestSuite) SetupSuite() {
 		fx.Provide(
 			fx.Annotate(repository.ProvideURLDB, fx.As(new(urlrepo.Repository))),
 		),
-	}
+		fx.Invoke(func(repo urlrepo.Repository, db *db.DB) {
+			s.db = db
+			s.repo = repo
+		}),
+	).RequireStart()
+}
+
+func (s *URLDBTestSuite) TearDownTest() {}
+
+func (s *URLDBTestSuite) TearDownSuite() {
+	s.app.RequireStop()
 }
 
 func (s *URLDBTestSuite) TestCreate() {
-	s.Invoke(s.testCreate)
-}
-
-func (s *URLDBTestSuite) testCreate(repo urlrepo.Repository, db *db.DB) {
 	require := s.Require()
 
 	// nolint: exhaustruct
-	require.NoError(repo.Create(context.Background(), url.URL{
+	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "static_random",
 		URL:    "https://github.com",
 		Visits: 0,
@@ -58,12 +59,11 @@ func (s *URLDBTestSuite) testCreate(repo urlrepo.Repository, db *db.DB) {
 	}))
 
 	// nolint: exhaustruct
-	url, err := repo.FromShortURL(context.Background(), "static_random")
+	url, err := s.repo.FromShortURL(context.Background(), "static_random")
 	require.NoError(err)
 
 	require.Equal(url.URL, "https://github.com")
-
-	require.NoError(db.DB.Where("key = ?", "static_random").Delete(&url).Error)
+	require.NoError(s.db.DB.Where("key = ?", "static_random").Delete(&url).Error)
 }
 
 func TestURLDB(t *testing.T) {
