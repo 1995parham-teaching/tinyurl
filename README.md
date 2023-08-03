@@ -1,4 +1,4 @@
-# Tiny URL
+<h1 algin="center"> Tiny URL </h1>
 
 ## Introduction
 
