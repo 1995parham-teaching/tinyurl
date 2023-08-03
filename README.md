@@ -1,9 +1,9 @@
 <h1 align="center"> Tiny URL </h1>
 
 <p align="center">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1989micahel/tinyurl/test.yaml?logo=github&style=for-the-badge">
-    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/1989micahel/tinyurl?logo=codecov&style=for-the-badge">
-    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/1989micahel/tinyurl?logo=github&style=for-the-badge">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1989michael/tinyurl/test.yaml?logo=github&style=for-the-badge">
+    <img alt="Codecov" src="https://img.shields.io/codecov/c/github/1989michael/tinyurl?logo=codecov&style=for-the-badge">
+    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/1989michael/tinyurl?logo=github&style=for-the-badge">
  </p>
 
 ## Introduction
