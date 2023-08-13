@@ -7,7 +7,7 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/http/request"
 )
 
-// nolint: funlen
+// nolint: funlen, exhaustruct
 func TestURLValidation(t *testing.T) {
 	t.Parallel()
 
@@ -17,27 +17,22 @@ func TestURLValidation(t *testing.T) {
 		isValid bool
 	}{
 		{
-			expire:  time.Unix(0, 0),
 			url:     "",
 			isValid: false,
 		},
 		{
-			expire:  time.Unix(0, 0),
 			url:     "hello",
 			isValid: false,
 		},
 		{
-			expire:  time.Unix(0, 0),
 			url:     "hello.com",
 			isValid: false,
 		},
 		{
-			expire:  time.Unix(0, 0),
 			url:     "www.hello.com",
 			isValid: false,
 		},
 		{
-			expire:  time.Unix(0, 0),
 			url:     "http://www.hello.com",
 			isValid: true,
 		},
