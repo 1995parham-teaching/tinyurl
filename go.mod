@@ -12,7 +12,7 @@ require (
 	github.com/knadh/koanf/v2 v2.0.1
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/prometheus/client_golang v1.16.0
-	github.com/pterm/pterm v0.12.65
+	github.com/pterm/pterm v0.12.66
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/pretty v1.2.1
@@ -35,7 +35,7 @@ require (
 require (
 	atomicgo.dev/cursor v0.2.0 // indirect
 	atomicgo.dev/keyboard v0.2.9 // indirect
-	atomicgo.dev/schedule v0.0.2 // indirect
+	atomicgo.dev/schedule v0.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
