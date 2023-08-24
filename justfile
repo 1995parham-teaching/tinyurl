@@ -37,5 +37,5 @@ database: (dev "up") (dev "exec" "database psql postgresql://tinyurl:secret@loca
 
 # run golangci-lint
 lint *flags:
-    atlas migrate lint --env local --git-base main
+    atlas migrate lint --env local --git-base origin/main
     golangci-lint run -c .golangci.yml {{ flags }}
