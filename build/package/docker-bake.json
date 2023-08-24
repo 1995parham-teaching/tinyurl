@@ -1,0 +1,17 @@
+{
+  "group": {
+    "default": {
+      "targets": [
+        "tinyurl"
+      ]
+    }
+  },
+  "target": {
+    "tinyurl": {
+      "dockerfile": "build/package/Dockerfile",
+      "tags": [
+        "ghcr.io/1989michael/tinyurl"
+      ]
+    }
+  }
+}
