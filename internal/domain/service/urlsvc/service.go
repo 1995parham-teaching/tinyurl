@@ -2,6 +2,7 @@ package urlsvc
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -33,12 +34,22 @@ func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Ge
 }
 
 func (s *URLSvc) create(ctx context.Context, key string, address string, expire *time.Time) error {
+	valid := true
+
+	if expire == nil {
+		expire = new(time.Time)
+		valid = false
+	}
+
 	// nolint exhaustruct
 	url := url.URL{
 		Key:    key,
 		URL:    address,
 		Visits: 0,
-		Expire: expire,
+		Expire: sql.NullTime{
+			Time:  *expire,
+			Valid: valid,
+		},
 	}
 
 	if err := s.repo.Create(ctx, url); err != nil {

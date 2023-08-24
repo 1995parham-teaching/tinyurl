@@ -2,7 +2,9 @@ package repository_test
 
 import (
 	"context"
+	"database/sql"
 	"testing"
+	"time"
 
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
 	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
@@ -55,7 +57,10 @@ func (s *URLDBTestSuite) TestCreate() {
 		Key:    "static_random",
 		URL:    "https://github.com",
 		Visits: 0,
-		Expire: nil,
+		Expire: sql.NullTime{
+			Time:  time.Now(),
+			Valid: false,
+		},
 	}))
 
 	// nolint: exhaustruct

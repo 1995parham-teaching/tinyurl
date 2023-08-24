@@ -28,6 +28,7 @@ test: (dev "up")
     go test -v ./... -covermode=atomic -coverprofile=coverage.out
 
 seed: (dev "up")
+    atlas migrate diff --env local
     atlas migrate apply --env local
     go run ./cmd/tinyurl/main.go seed
 

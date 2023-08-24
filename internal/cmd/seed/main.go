@@ -2,6 +2,7 @@ package seed
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
@@ -22,10 +23,13 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 
 	records := []url.URL{
 		{
-			Key:       "static_google",
-			URL:       "https://google.com",
-			Visits:    0,
-			Expire:    nil,
+			Key:    "static_google",
+			URL:    "https://google.com",
+			Visits: 0,
+			Expire: sql.NullTime{
+				Time:  time.Now(),
+				Valid: false,
+			},
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
