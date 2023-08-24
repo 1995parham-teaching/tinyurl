@@ -1,6 +1,6 @@
 module github.com/1989michael/tinyurl
 
-go 1.20
+go 1.21
 
 require (
 	ariga.io/atlas-go-sdk v0.1.0
