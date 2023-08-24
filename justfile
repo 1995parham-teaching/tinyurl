@@ -28,7 +28,7 @@ test: (dev "up")
     go test -v ./... -covermode=atomic -coverprofile=coverage.out
 
 seed: (dev "up")
-    go run ./cmd/tinyurl/main.go migrate
+    atlas migrate apply --env local
     go run ./cmd/tinyurl/main.go seed
 
 # connect into the dev environment database

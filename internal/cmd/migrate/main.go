@@ -1,23 +1,24 @@
 package migrate
 
 import (
+	"io"
+	"log"
+	"os"
+
+	_ "ariga.io/atlas-go-sdk/recordriver" // required by atlasgo
+	"ariga.io/atlas-provider-gorm/gormschema"
 	"github.com/1989michael/tinyurl/internal/domain/model/url"
-	"github.com/1989michael/tinyurl/internal/infra/config"
-	"github.com/1989michael/tinyurl/internal/infra/db"
-	"github.com/1989michael/tinyurl/internal/infra/logger"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 )
 
-func main(logger *zap.Logger, db *db.DB, shutdonwer fx.Shutdowner) {
-	logger.Info("running migrations using gorm")
-
-	if err := db.DB.AutoMigrate(new(url.URL)); err != nil {
-		logger.Fatal("migration failed", zap.Error(err))
+func main(shutdonwer fx.Shutdowner) {
+	stmts, err := gormschema.New("postgres").Load(new(url.URL))
+	if err != nil {
+		log.Fatalf("failed to load gorm schema %s", err)
 	}
 
-	logger.Info("migrations applied successfully")
+	_, _ = io.WriteString(os.Stdout, stmts)
 
 	_ = shutdonwer.Shutdown()
 }
@@ -31,9 +32,6 @@ func Register(root *cobra.Command) {
 			Short: "Database migration",
 			Run: func(_ *cobra.Command, _ []string) {
 				fx.New(
-					fx.Provide(config.Provide),
-					fx.Provide(logger.Provide),
-					fx.Provide(db.Provide),
 					fx.NopLogger,
 					fx.Invoke(main),
 				).Run()

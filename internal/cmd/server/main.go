@@ -11,6 +11,8 @@ import (
 	"github.com/1989michael/tinyurl/internal/infra/repository"
 	"github.com/1989michael/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
+	"github.com/pterm/pterm"
+	"github.com/pterm/pterm/putils"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
@@ -30,6 +32,14 @@ func Register(
 		&cobra.Command{
 			Use:   "server",
 			Short: "Run server to serve the requests",
+			PersistentPreRun: func(_ *cobra.Command, _ []string) {
+				pterm.DefaultCenter.Println("Shorten your URL to easily remember them and share them with your clients")
+
+				s, _ := pterm.DefaultBigText.WithLetters(putils.LettersFromString("TinyURL")).Srender()
+				pterm.DefaultCenter.Println(s)
+
+				pterm.DefaultCenter.WithCenterEachLineSeparately().Println("Michael Weiss\nJuly 2023")
+			},
 			Run: func(_ *cobra.Command, _ []string) {
 				fx.New(
 					fx.Provide(config.Provide),

@@ -3,6 +3,8 @@ module github.com/1989michael/tinyurl
 go 1.20
 
 require (
+	ariga.io/atlas-go-sdk v0.1.0
+	ariga.io/atlas-provider-gorm v0.1.0
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/knadh/koanf/parsers/toml v0.1.0
@@ -45,6 +47,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gookit/color v1.5.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -59,6 +62,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -82,4 +86,6 @@ require (
 	golang.org/x/text v0.12.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/mysql v1.5.1 // indirect
+	gorm.io/driver/sqlite v1.5.3 // indirect
 )
