@@ -17,7 +17,7 @@ dev cmd *flags:
       docker compose -f ./deployments/docker-compose.yml down --remove-orphans
       docker compose -f ./deployments/docker-compose.yml rm
     elif [ {{ cmd }} = 'up' ]; then
-      docker compose -f ./deployments/docker-compose.yml up -d {{ flags }}
+      docker compose -f ./deployments/docker-compose.yml up --wait -d {{ flags }}
     else
       docker compose -f ./deployments/docker-compose.yml {{ cmd }} {{ flags }}
     fi
