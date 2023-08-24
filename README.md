@@ -9,7 +9,7 @@
 ## Introduction
 
 Writing an API project in Golang is Art, because there isn't any de-faco framework or standards to do something.
-You have a planty of ways for doing things and at end you may figure out the way is not good or extensible as you think.
+You have a plenty of ways for doing things and at end you may figure out the way is not good or extensible as you think.
 
 I want in this project select some of these ways and shows how their end is looking:
 
