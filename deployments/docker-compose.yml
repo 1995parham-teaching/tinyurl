@@ -1,5 +1,3 @@
-version: "3.10"
-
 services:
   database:
     image: "postgres"
