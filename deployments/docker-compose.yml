@@ -13,8 +13,6 @@ services:
         [
           "CMD-SHELL",
           "pg_isready",
-          "-d",
-          "tinyurl"
         ]
       interval: 10s
       timeout: 5s
