@@ -10,7 +10,6 @@ type URL struct {
 	URL    string       `gorm:"index"`
 	Visits uint64       `gorm:"check:,visits >= 0"`
 	Expire sql.NullTime `gorm:"check:,expire > created_at"`
-	Onwer  sql.NullString
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
