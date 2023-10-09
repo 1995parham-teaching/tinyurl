@@ -1,6 +1,6 @@
 services:
   database:
-    image: "postgres"
+    image: "postgres:15"
     environment:
       POSTGRES_USER: tinyurl
       POSTGRES_PASSWORD: secret
