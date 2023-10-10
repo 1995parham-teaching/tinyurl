@@ -19,7 +19,6 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/pretty v1.2.1
 	go.opentelemetry.io/otel v1.19.0
-	go.opentelemetry.io/otel/exporters/jaeger v1.17.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.19.0
 	go.opentelemetry.io/otel/exporters/prometheus v0.42.0
 	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v0.42.0
@@ -30,7 +29,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.19.0
 	go.uber.org/fx v1.20.0
 	go.uber.org/zap v1.26.0
-	golang.org/x/net v0.15.0
+	golang.org/x/net v0.16.0
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
 )
@@ -85,9 +84,9 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/dig v1.17.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
-	golang.org/x/term v0.12.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230920204549-e6e6cdab5c13 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230920204549-e6e6cdab5c13 // indirect
