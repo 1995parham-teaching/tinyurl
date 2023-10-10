@@ -25,5 +25,5 @@ The `internal/domain` package contains the domain-specific logics. As rule of th
 `internal/domain` must use only go standard packages or other application packages, so they should not use any third party
 libraries directly.
 
-The infrastructure layer do the actuall using of third party libraries and resides in `infra` package.
-Actual implementation always go into the `infra` package.
+The infrastructure layer does the actual using of third party libraries and resides in `infra` package.
+Actual implementation always goes into the `infra` package.
