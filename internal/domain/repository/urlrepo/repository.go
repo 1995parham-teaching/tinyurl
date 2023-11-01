@@ -13,7 +13,7 @@ var (
 )
 
 type Repository interface {
-	Create(context.Context, url.URL) error
-	Update(context.Context, url.URL) error
-	FromShortURL(context.Context, string) (url.URL, error)
+	Create(ctx context.Context, url url.URL) error
+	Update(ctx context.Context, url url.URL) error
+	FromShortURL(ctx context.Context, key string) (url.URL, error)
 }

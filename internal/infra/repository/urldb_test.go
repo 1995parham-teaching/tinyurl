@@ -67,7 +67,7 @@ func (s *URLDBTestSuite) TestCreate() {
 	url, err := s.repo.FromShortURL(context.Background(), "static_random")
 	require.NoError(err)
 
-	require.Equal(url.URL, "https://github.com")
+	require.Equal("https://github.com", url.URL)
 	require.NoError(s.db.DB.Where("key = ?", "static_random").Delete(&url).Error)
 }
 
