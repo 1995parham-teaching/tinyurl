@@ -3,7 +3,7 @@ module github.com/1989michael/tinyurl
 go 1.21
 
 require (
-	ariga.io/atlas-go-sdk v0.1.1-0.20231001054405-7edfcfc14f1c
+	ariga.io/atlas-go-sdk v0.2.0
 	ariga.io/atlas-provider-gorm v0.1.1
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
