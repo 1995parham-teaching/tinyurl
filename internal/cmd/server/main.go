@@ -1,15 +1,15 @@
 package server
 
 import (
-	"github.com/1989michael/tinyurl/internal/domain/repository/urlrepo"
-	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
-	"github.com/1989michael/tinyurl/internal/infra/config"
-	"github.com/1989michael/tinyurl/internal/infra/db"
-	"github.com/1989michael/tinyurl/internal/infra/generator"
-	"github.com/1989michael/tinyurl/internal/infra/http/server"
-	"github.com/1989michael/tinyurl/internal/infra/logger"
-	"github.com/1989michael/tinyurl/internal/infra/repository"
-	"github.com/1989michael/tinyurl/internal/infra/telemetry"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/repository/urlrepo"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/config"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/db"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/server"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/repository"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
@@ -38,7 +38,7 @@ func Register(
 				s, _ := pterm.DefaultBigText.WithLetters(putils.LettersFromString("TinyURL")).Srender()
 				pterm.DefaultCenter.Println(s)
 
-				pterm.DefaultCenter.WithCenterEachLineSeparately().Println("Michael Weiss\nJuly 2023")
+				pterm.DefaultCenter.WithCenterEachLineSeparately().Println("Parham Alvani\nJuly 2023")
 			},
 			Run: func(_ *cobra.Command, _ []string) {
 				fx.New(

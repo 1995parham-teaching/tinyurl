@@ -7,7 +7,7 @@ import (
 
 	_ "ariga.io/atlas-go-sdk/recordriver" // required by atlasgo
 	"ariga.io/atlas-provider-gorm/gormschema"
-	"github.com/1989michael/tinyurl/internal/domain/model/url"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/model/url"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )

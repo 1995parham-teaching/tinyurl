@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
-	"github.com/1989michael/tinyurl/internal/infra/http/handler"
-	"github.com/1989michael/tinyurl/internal/infra/telemetry"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/handler"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 	"go.uber.org/zap"

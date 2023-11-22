@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/1989michael/tinyurl/internal/cmd/migrate"
-	"github.com/1989michael/tinyurl/internal/cmd/seed"
-	"github.com/1989michael/tinyurl/internal/cmd/server"
+	"github.com/1995parham-teaching/tinyurl/internal/cmd/migrate"
+	"github.com/1995parham-teaching/tinyurl/internal/cmd/seed"
+	"github.com/1995parham-teaching/tinyurl/internal/cmd/server"
 	"github.com/carlmjohnson/versioninfo"
 	"github.com/spf13/cobra"
 )

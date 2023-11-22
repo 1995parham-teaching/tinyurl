@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/1989michael/tinyurl/internal/infra/http/request"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/request"
 )
 
 // nolint: funlen, exhaustruct

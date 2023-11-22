@@ -1,4 +1,4 @@
-module github.com/1989michael/tinyurl
+module github.com/1995parham-teaching/tinyurl
 
 go 1.21
 

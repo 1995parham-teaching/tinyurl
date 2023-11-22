@@ -3,7 +3,7 @@ package generator_test
 import (
 	"testing"
 
-	"github.com/1989michael/tinyurl/internal/infra/generator"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
 	"github.com/stretchr/testify/require"
 )
 

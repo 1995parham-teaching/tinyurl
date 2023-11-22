@@ -10,7 +10,7 @@
     "tinyurl": {
       "dockerfile": "build/package/Dockerfile",
       "tags": [
-        "ghcr.io/1989michael/tinyurl"
+        "ghcr.io/1995parham-teaching/tinyurl"
       ]
     }
   }

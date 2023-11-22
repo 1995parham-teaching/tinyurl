@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/1989michael/tinyurl/internal/infra/http/handler"
-	"github.com/1989michael/tinyurl/internal/infra/telemetry"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/handler"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"

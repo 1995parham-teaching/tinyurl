@@ -3,10 +3,10 @@ package config
 import (
 	"time"
 
-	"github.com/1989michael/tinyurl/internal/infra/db"
-	"github.com/1989michael/tinyurl/internal/infra/generator"
-	"github.com/1989michael/tinyurl/internal/infra/logger"
-	"github.com/1989michael/tinyurl/internal/infra/telemetry"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/db"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"go.uber.org/fx"
 )
 
@@ -30,7 +30,7 @@ func Default() Config {
 			ConnMaxLifetime: 10 * time.Second,
 		},
 		Telemetry: telemetry.Config{
-			Namespace:   "1989michael",
+			Namespace:   "1995parham-teaching",
 			ServiceName: "tinyurl",
 			Meter: telemetry.Meter{
 				Address: ":8080",

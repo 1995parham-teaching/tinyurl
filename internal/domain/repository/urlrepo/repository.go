@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/1989michael/tinyurl/internal/domain/model/url"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/model/url"
 )
 
 var (

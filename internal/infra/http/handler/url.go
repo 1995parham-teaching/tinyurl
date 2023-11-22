@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/1989michael/tinyurl/internal/domain/service/urlsvc"
-	"github.com/1989michael/tinyurl/internal/infra/http/request"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/request"
 	"github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
