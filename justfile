@@ -25,7 +25,7 @@ dev cmd *flags:
 # run tests in the dev environment
 test: (dev "up")
     just seed
-    go test -v ./... -covermode=atomic -coverprofile=coverage.out
+    go test -v -race -shuffle=on ./... -covermode=atomic -coverprofile=coverage.out
 
 seed: (dev "up")
     atlas migrate diff --env local
