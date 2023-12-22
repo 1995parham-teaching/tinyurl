@@ -1,6 +1,10 @@
 <h1 align="center"> Tiny URL </h1>
 
 <p align="center">
+<img src="./.github/assets/logo.png" height="250px">
+</p>
+
+<p align="center">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1995parham-teaching/tinyurl/test.yaml?logo=github&style=for-the-badge">
     <img alt="Codecov" src="https://img.shields.io/codecov/c/github/1995parham-teaching/tinyurl?logo=codecov&style=for-the-badge">
     <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/1995parham-teaching/tinyurl?logo=github&style=for-the-badge">
