@@ -36,3 +36,19 @@ libraries directly.
 
 The infrastructure layer does the actual using of third party libraries and resides in `infra` package.
 Actual implementation always goes into the `infra` package.
+
+## Repositories
+
+To facilitate database access, we've defined repository interfaces within the `domain` package.
+These form the contract for our data access methods.
+Corresponding implementations can be found in the `infra` package,
+ensuring a separation of concerns between our domain definitions and infrastructure-specific code.
+
+### Repository Interfaces
+
+- The interfaces are prefixed with `repo` to denote their role as repositories within the domain layer.
+
+### Implementation
+
+- The actual implementations carry a `db` prefix, indicating their direct interaction with the database
+  and their role within the infrastructure layer.
