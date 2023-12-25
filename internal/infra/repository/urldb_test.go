@@ -43,10 +43,19 @@ func (s *URLDBTestSuite) SetupSuite() {
 	).RequireStart()
 }
 
-func (s *URLDBTestSuite) TearDownTest() {}
+func (s *URLDBTestSuite) TearDownTest() {
+	s.db.DB.Delete(new(url.URL))
+}
 
 func (s *URLDBTestSuite) TearDownSuite() {
 	s.app.RequireStop()
+}
+
+func (s *URLDBTestSuite) TestNotFound() {
+	require := s.Require()
+
+	_, err := s.repo.FromShortURL(context.Background(), "static_random")
+	require.ErrorIs(urlrepo.ErrURLNotFound, err)
 }
 
 func (s *URLDBTestSuite) TestCreate() {
@@ -68,7 +77,7 @@ func (s *URLDBTestSuite) TestCreate() {
 	require.NoError(err)
 
 	require.Equal("https://github.com", url.URL)
-	require.NoError(s.db.DB.Where("key = ?", "static_random").Delete(&url).Error)
+	require.Equal(false, url.Expire.Valid)
 }
 
 func TestURLDB(t *testing.T) {
