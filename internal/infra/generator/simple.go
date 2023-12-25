@@ -5,6 +5,7 @@ import (
 	"math/big"
 )
 
+// Simple is an easy to use random key generator.
 type Simple struct{}
 
 // ShortURLKey generates a random key from the source characters.
