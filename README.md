@@ -12,15 +12,20 @@
 
 ## Introduction
 
-Writing an API project in Golang is Art, because there isn't any de-faco framework or standards to do something.
-You have a plenty of ways for doing things and at end you may figure out the way is not good or extensible as you think.
+Writing an API project in Golang can be likened to art,
+due to the absence of a de facto framework or established standards for development.
+There is a plethora of approaches available,
+and it isn't uncommon to discover that the chosen method isn't as effective or extensible as initially assumed.
 
-I want in this project select some of these ways and shows how their end is looking:
+### Objectives
 
-- Logging with [zap](https://github.com/uber-go/zap)
-- Metrics with [otel](https://github.com/open-telemetry/opentelemetry-go)
-- Tracing with [otel](https://github.com/open-telemetry/opentelemetry-go)
-- Dependency Injection using [fx](https://github.com/uber-go/fx)
+In this project, I aim to explore and demonstrate the outcomes of several such approaches:
+
+- **Logging with [`zap`](https://github.com/uber-go/zap):** A fast, structured, leveled logging in Go.
+- **Metrics with [`otel`](https://github.com/open-telemetry/opentelemetry-go) (OpenTelemetry):** Instrumenting code to collect and report metrics.
+- **Tracing with [`otel`](https://github.com/open-telemetry/opentelemetry-go) (OpenTelemetry):** Capturing the flow and latency of operations in our application.
+- **Dependency Injection using [`fx`](https://github.com/uber-go/fx):** A framework for dependency injection providing a robust way of managing dependencies.
+- **Migrations using [`atlasgo`](https://atlasgo.io/):** Managing database schema migrations in an agile manner.
 
 ## Packaging
 
