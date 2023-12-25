@@ -1,8 +1,10 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
@@ -13,6 +15,8 @@ type DB struct {
 	DB  *gorm.DB
 	SQL *sql.DB
 }
+
+const PingTimeout = 10 * time.Second
 
 func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
 	// nolint: exhaustruct
@@ -36,6 +40,13 @@ func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
 	sqlDB, err := db.DB()
 	if err != nil {
 		return nil, fmt.Errorf("cannot get sql database from gorm %w", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), PingTimeout)
+	defer cancel()
+
+	if err := sqlDB.PingContext(ctx); err != nil {
+		return nil, fmt.Errorf("cannot ping the database %w", err)
 	}
 
 	logger.Info("get sql database from gorm successfully", zap.String("dsn", cfg.DSN))
