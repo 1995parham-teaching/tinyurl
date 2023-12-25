@@ -3,6 +3,7 @@ package repository_test
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"testing"
 	"time"
 
@@ -16,6 +17,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
+	"gorm.io/gorm"
 )
 
 type URLDBTestSuite struct {
@@ -44,7 +46,14 @@ func (s *URLDBTestSuite) SetupSuite() {
 }
 
 func (s *URLDBTestSuite) TearDownTest() {
-	s.db.DB.Delete(new(url.URL))
+	require := s.Require()
+
+	// nolint: exhaustruct
+	stmt := &gorm.Statement{DB: s.db.DB}
+	require.NoError(stmt.Parse(new(url.URL)))
+
+	tx := s.db.DB.Exec(fmt.Sprintf("TRUNCATE TABLE %s;", stmt.Schema.Table))
+	require.NoError(tx.Error)
 }
 
 func (s *URLDBTestSuite) TearDownSuite() {
@@ -77,7 +86,7 @@ func (s *URLDBTestSuite) TestCreate() {
 	require.NoError(err)
 
 	require.Equal("https://github.com", url.URL)
-	require.Equal(false, url.Expire.Valid)
+	require.False(url.Expire.Valid)
 }
 
 func TestURLDB(t *testing.T) {
