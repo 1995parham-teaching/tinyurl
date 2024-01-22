@@ -19,7 +19,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/pretty v1.2.1
 	go.opentelemetry.io/otel v1.22.0
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.21.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.22.0
 	go.opentelemetry.io/otel/exporters/prometheus v0.45.0
 	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v0.44.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.21.0
@@ -80,7 +80,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.21.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.22.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/dig v1.17.1 // indirect
