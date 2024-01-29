@@ -1,5 +1,5 @@
-ariga.io/atlas-go-sdk v0.3.0 h1:19hxr3Fm/Jg/pNSLq3mpTQs1k1sPNhQXpLgVtIDQ0J8=
-ariga.io/atlas-go-sdk v0.3.0/go.mod h1:owkEEXw6jqne5KPVDfKsYB7cwMiMk3jtOiAAeKxS/yU=
+ariga.io/atlas-go-sdk v0.4.0 h1:JvydYd7zuExxDCrgKQtKFOT6nAqBTsx/3EXkrOco+BA=
+ariga.io/atlas-go-sdk v0.4.0/go.mod h1:owkEEXw6jqne5KPVDfKsYB7cwMiMk3jtOiAAeKxS/yU=
 ariga.io/atlas-provider-gorm v0.2.0 h1:6f8djycY7U683Aq7btlaHtMTlIFl1W6q0bgb6yzv8Ic=
 ariga.io/atlas-provider-gorm v0.2.0/go.mod h1:bE+I/NFRS6/F3B97gyhXFMksXkHqFeOfuD607iZxQww=
 atomicgo.dev/assert v0.0.2 h1:FiKeMiZSgRrZsPo9qn/7vmr7mCsh5SZyXY4YGYiYwrg=
