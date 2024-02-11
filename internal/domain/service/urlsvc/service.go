@@ -74,7 +74,7 @@ func (s *URLSvc) Create(ctx context.Context, address string, expire *time.Time) 
 }
 
 func (s *URLSvc) CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error {
-	key = fmt.Sprintf("static_%s", key)
+	key = "static_" + key
 
 	if err := s.create(ctx, key, address, expire); err != nil {
 		if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
@@ -99,7 +99,7 @@ func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
 		}
 	}
 
-	url, err := s.repo.FromShortURL(ctx, fmt.Sprintf("static_%s", key))
+	url, err := s.repo.FromShortURL(ctx, "static_"+key)
 	if err != nil {
 		if errors.Is(err, urlrepo.ErrURLNotFound) {
 			return url, ErrURLNotFound
