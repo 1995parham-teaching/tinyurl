@@ -3,7 +3,7 @@ module github.com/1995parham-teaching/tinyurl
 go 1.21
 
 require (
-	ariga.io/atlas-go-sdk v0.4.0
+	ariga.io/atlas-go-sdk v0.5.2
 	ariga.io/atlas-provider-gorm v0.3.0
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
@@ -69,7 +69,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
-	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/microsoft/go-mssqldb v1.6.0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
