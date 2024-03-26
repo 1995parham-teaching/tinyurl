@@ -55,6 +55,7 @@ func TestURLValidation(t *testing.T) {
 
 	for _, c := range cases {
 		var expire *time.Time
+		// #nosec G601
 		if !c.expire.IsZero() {
 			expire = &c.expire
 		}
