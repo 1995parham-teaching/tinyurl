@@ -54,10 +54,11 @@ func TestURLValidation(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		var expire *time.Time
-		// nolint: gosec
-		if !c.expire.IsZero() {
-			expire = &c.expire
+		expire := new(time.Time)
+
+		*expire = c.expire
+		if c.expire.IsZero() {
+			expire = nil
 		}
 
 		rq := request.URL{
