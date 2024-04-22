@@ -20,7 +20,7 @@ require (
 	github.com/tidwall/pretty v1.2.1
 	go.opentelemetry.io/otel v1.25.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.25.0
-	go.opentelemetry.io/otel/exporters/prometheus v0.46.0
+	go.opentelemetry.io/otel/exporters/prometheus v0.47.0
 	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v1.25.0
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.25.0
 	go.opentelemetry.io/otel/metric v1.25.0
@@ -73,7 +73,7 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_model v0.6.0 // indirect
+	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.49.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
