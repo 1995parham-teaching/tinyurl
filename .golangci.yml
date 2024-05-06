@@ -20,3 +20,5 @@ linters:
     - nosnakecase
     - ifshort
     - structcheck
+    - gomnd
+    - execinquery

@@ -11,7 +11,7 @@ import (
 )
 
 // Default return default configuration.
-// nolint: gomnd
+// nolint: mnd
 func Default() Config {
 	return Config{
 		Out: fx.Out{},
