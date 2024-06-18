@@ -3,7 +3,7 @@ module github.com/1995parham-teaching/tinyurl
 go 1.22
 
 require (
-	ariga.io/atlas-go-sdk v0.5.3
+	ariga.io/atlas-go-sdk v0.5.5
 	ariga.io/atlas-provider-gorm v0.5.0
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
