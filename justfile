@@ -28,19 +28,14 @@ test: (dev "up")
     go test -v -race -shuffle=on ./... -covermode=atomic -coverprofile=coverage.out
 
 seed: (dev "up")
-    go run ariga.io/atlas/cmd/atlas@latest migrate diff --env local
-    go run ariga.io/atlas/cmd/atlas@latest migrate apply --env local
+    atlas migrate diff --env local
+    atlas migrate apply --env local
     go run ./cmd/tinyurl/main.go seed
 
 # connect into the dev environment database
 database: (dev "up") (dev "exec" "database psql postgresql://tinyurl:secret@localhost/tinyurl")
 
-# run golangci-lint linting
-[group('lint')]
-go-lint *flags:
-    go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run -c .golangci.yml {{ flags }}
-
-# run atlas linting over migrations
-[group('lint')]
-atlas-lint:
-    go run ariga.io/atlas/cmd/atlas@latest migrate lint --env local --git-base origin/main
+# run golangci-lint and atlas linting
+lint *flags:
+    atlas migrate lint --env local --git-base origin/main
+    golangci-lint run -c .golangci.yml {{ flags }}

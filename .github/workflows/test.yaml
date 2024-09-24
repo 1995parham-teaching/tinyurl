@@ -12,8 +12,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: "go.mod"
-      - run: just atlas-lint
-      - run: just go-lint
+      - run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+      - run: curl -sSf 'https://atlasgo.sh?test=1' | env ATLAS_DEBUG=true sh
+      - run: just lint
 
   test:
     name: test
