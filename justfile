@@ -35,7 +35,12 @@ seed: (dev "up")
 # connect into the dev environment database
 database: (dev "up") (dev "exec" "database psql postgresql://tinyurl:secret@localhost/tinyurl")
 
-# run golangci-lint and atlas linting
-lint *flags:
-    atlas migrate lint --env local --git-base origin/main
+# run golangci-lint linting
+[group("lint")]
+go-lint *flags:
     golangci-lint run -c .golangci.yml {{ flags }}
+
+# run atlas linting over migrations
+[group("lint")]
+atlas-lint *flags:
+    atlas migrate lint --env local --git-base origin/main
