@@ -1,9 +1,6 @@
 package generator
 
-import (
-	"crypto/rand"
-	"math/big"
-)
+import "math/rand/v2"
 
 // Simple is an easy to use random key generator.
 type Simple struct{}
@@ -17,12 +14,7 @@ func (Simple) ShortURLKey() string {
 
 	b := make([]byte, length)
 	for i := range b {
-		n, err := rand.Int(rand.Reader, big.NewInt(int64(len(source))))
-		if err != nil {
-			panic(err)
-		}
-
-		b[i] = source[n.Int64()]
+		b[i] = source[rand.IntN(len(source))] // nolint: gosec
 	}
 
 	return string(b)

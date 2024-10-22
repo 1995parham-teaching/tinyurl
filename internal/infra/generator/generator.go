@@ -5,9 +5,7 @@ type Generator interface {
 }
 
 func Provide(cfg Config) Generator {
-	// nolint: gocritic
-	switch cfg.Type {
-	case "simple":
+	if cfg.Type == "simple" {
 		return new(Simple)
 	}
 
