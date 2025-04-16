@@ -87,6 +87,22 @@ func (s *URLSvc) CreateWithKey(ctx context.Context, key string, address string, 
 	return nil
 }
 
+func (s *URLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
+	url, err := s.visit(ctx, key)
+	if err != nil {
+		return url, err
+	}
+
+	// we can use transaction here but number of visits is not accurate number.
+	url.Visits++
+
+	if err := s.repo.Update(ctx, url); err != nil {
+		s.logger.Error("updating url visit coount failed", zap.Error(err))
+	}
+
+	return url, nil
+}
+
 func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
 	{
 		url, err := s.repo.FromShortURL(ctx, key)
@@ -106,22 +122,6 @@ func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
 		}
 
 		return url, fmt.Errorf("url fetching failed %w", err)
-	}
-
-	return url, nil
-}
-
-func (s *URLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
-	url, err := s.visit(ctx, key)
-	if err != nil {
-		return url, err
-	}
-
-	// we can use transaction here but number of visits is not accurate number.
-	url.Visits++
-
-	if err := s.repo.Update(ctx, url); err != nil {
-		s.logger.Error("updating url visit coount failed", zap.Error(err))
 	}
 
 	return url, nil
