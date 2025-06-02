@@ -30,7 +30,7 @@ require (
 	go.uber.org/fx v1.24.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.40.0
-	gorm.io/driver/postgres v1.5.11
+	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.0
 )
 
@@ -41,7 +41,6 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/containerd/console v1.0.5 // indirect
