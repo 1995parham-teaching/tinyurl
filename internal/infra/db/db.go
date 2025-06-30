@@ -45,7 +45,8 @@ func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), PingTimeout)
 	defer cancel()
 
-	if err := sqlDB.PingContext(ctx); err != nil {
+	err = sqlDB.PingContext(ctx)
+	if err != nil {
 		return nil, fmt.Errorf("cannot ping the database %w", err)
 	}
 

@@ -42,7 +42,8 @@ func ProvideURLDB(db *db.DB, tele telemetry.Telemetery, logger *zap.Logger) *URL
 func (r *URLDB) Create(ctx context.Context, url url.URL) error {
 	start := time.Now()
 
-	if err := r.db.DB.WithContext(ctx).Save(&url).Error; err != nil {
+	err := r.db.DB.WithContext(ctx).Save(&url).Error
+	if err != nil {
 		r.logger.Error("url creation failed", zap.Error(err), zap.String(logtag.Operation, "create"))
 
 		return fmt.Errorf("url creation failed %w", err)
@@ -64,7 +65,8 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 
 	var url url.URL
 
-	if err := r.db.DB.WithContext(ctx).Where("key = ?", key).First(&url).Error; err != nil {
+	err := r.db.DB.WithContext(ctx).Where("key = ?", key).First(&url).Error
+	if err != nil {
 		r.logger.Error("fetching url from database failed", zap.Error(err), zap.String(logtag.Operation, "from-short-url"))
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -92,7 +94,8 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 func (r *URLDB) Update(ctx context.Context, url url.URL) error {
 	start := time.Now()
 
-	if err := r.db.DB.WithContext(ctx).Save(url).Error; err != nil {
+	err := r.db.DB.WithContext(ctx).Save(url).Error
+	if err != nil {
 		r.logger.Error("updating url failed", zap.Error(err), zap.String(logtag.Operation, "update"))
 
 		return fmt.Errorf("updating url failed %w", err)

@@ -28,14 +28,16 @@ func (h URL) Create(c echo.Context) error {
 
 	var rq request.URL
 
-	if err := c.Bind(&rq); err != nil {
+	err := c.Bind(&rq)
+	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if err := rq.Validate(); err != nil {
+	err = rq.Validate()
+	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
@@ -45,7 +47,8 @@ func (h URL) Create(c echo.Context) error {
 	span.SetAttributes(attribute.String("url", rq.URL))
 
 	if rq.Name != "" {
-		if err := h.Store.CreateWithKey(ctx, rq.Name, rq.URL, rq.Expire); err != nil {
+		err := h.Store.CreateWithKey(ctx, rq.Name, rq.URL, rq.Expire)
+		if err != nil {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, err.Error())
 
