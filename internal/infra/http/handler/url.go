@@ -15,9 +15,9 @@ import (
 
 // URL handles interaction with URLs.
 type URL struct {
-	Service  *urlsvc.URLSvc
-	Logger *zap.Logger
-	Tracer trace.Tracer
+	Service urlsvc.URLSvc
+	Logger  *zap.Logger
+	Tracer  trace.Tracer
 }
 
 // Create generates short URL and save it on database.

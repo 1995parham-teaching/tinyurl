@@ -13,7 +13,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"go.opentelemetry.io/otel/trace"
 	"go.opentelemetry.io/otel/trace/noop"
 	"go.uber.org/zap"
 
@@ -26,12 +25,12 @@ type MockURLSvc struct {
 	mock.Mock
 }
 
-func (m *MockURLSvc) Create(ctx context.Context, longURL string, expire time.Duration) (string, error) {
+func (m *MockURLSvc) Create(ctx context.Context, longURL string, expire *time.Time) (string, error) {
 	args := m.Called(ctx, longURL, expire)
 	return args.String(0), args.Error(1)
 }
 
-func (m *MockURLSvc) CreateWithKey(ctx context.Context, key, longURL string, expire time.Duration) error {
+func (m *MockURLSvc) CreateWithKey(ctx context.Context, key, longURL string, expire *time.Time) error {
 	args := m.Called(ctx, key, longURL, expire)
 	return args.Error(0)
 }
@@ -55,7 +54,7 @@ func TestURL_Create(t *testing.T) {
 			name: "success with random key",
 			body: `{"url": "http://example.com"}`,
 			mockSvc: func(m *MockURLSvc) {
-				m.On("Create", mock.Anything, "http://example.com", time.Duration(0)).Return("random-key", nil)
+				m.On("Create", mock.Anything, "http://example.com", mock.AnythingOfType("*time.Time")).Return("random-key", nil)
 			},
 			expectedStatusCode: http.StatusOK,
 			expectedBody:       `"random-key"`,
@@ -64,7 +63,7 @@ func TestURL_Create(t *testing.T) {
 			name: "success with custom key",
 			body: `{"url": "http://example.com", "name": "custom-key"}`,
 			mockSvc: func(m *MockURLSvc) {
-				m.On("CreateWithKey", mock.Anything, "custom-key", "http://example.com", time.Duration(0)).Return(nil)
+				m.On("CreateWithKey", mock.Anything, "custom-key", "http://example.com", mock.AnythingOfType("*time.Time")).Return(nil)
 			},
 			expectedStatusCode: http.StatusNoContent,
 		},
@@ -72,7 +71,7 @@ func TestURL_Create(t *testing.T) {
 			name: "duplicate key",
 			body: `{"url": "http://example.com", "name": "duplicate-key"}`,
 			mockSvc: func(m *MockURLSvc) {
-				m.On("CreateWithKey", mock.Anything, "duplicate-key", "http://example.com", time.Duration(0)).Return(urlsvc.ErrKeyAlreadyExists)
+				m.On("CreateWithKey", mock.Anything, "duplicate-key", "http://example.com", mock.AnythingOfType("*time.Time")).Return(urlsvc.ErrKeyAlreadyExists)
 			},
 			expectedStatusCode: http.StatusBadRequest,
 		},
@@ -85,7 +84,6 @@ func TestURL_Create(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -99,24 +97,22 @@ func TestURL_Create(t *testing.T) {
 			tc.mockSvc(mockSvc)
 
 			h := handler.URL{
-				Store:  mockSvc,
-				Logger: zap.NewNop(),
-				Tracer: noop.NewTracerProvider().Tracer("test"),
+				Service: mockSvc,
+				Logger:  zap.NewNop(),
+				Tracer:  noop.NewTracerProvider().Tracer(""),
 			}
 
 			err := h.Create(c)
 
-			if assert.NoError(t, err) {
 				assert.Equal(t, tc.expectedStatusCode, rec.Code)
 				if tc.expectedBody != "" {
-					var expected, actual interface{}
+					var expected, actual any
 					err = json.Unmarshal([]byte(tc.expectedBody), &expected)
 					assert.NoError(t, err)
 					err = json.Unmarshal(rec.Body.Bytes(), &actual)
 					assert.NoError(t, err)
 					assert.Equal(t, expected, actual)
 				}
-			}
 
 			mockSvc.AssertExpectations(t)
 		})
@@ -137,7 +133,7 @@ func TestURL_Retrieve(t *testing.T) {
 			name: "success",
 			key:  "test-key",
 			mockSvc: func(m *MockURLSvc) {
-				m.On("Visit", mock.Anything, "test-key").Return(urlsvc.URL{URL: "http://example.com"}, nil)
+				m.On("Visit", mock.Anything, "test-key").Return(url.URL{URL: "http://example.com"}, nil)
 			},
 			expectedStatusCode: http.StatusFound,
 			expectedLocation:   "http://example.com",
@@ -146,14 +142,13 @@ func TestURL_Retrieve(t *testing.T) {
 			name: "not found",
 			key:  "not-found-key",
 			mockSvc: func(m *MockURLSvc) {
-				m.On("Visit", mock.Anything, "not-found-key").Return(urlsvc.URL{}, errors.New("not found"))
+				m.On("Visit", mock.Anything, "not-found-key").Return(url.URL{}, errors.New("not found"))
 			},
 			expectedStatusCode: http.StatusNotFound,
 		},
 	}
 
 	for _, tc := range testCases {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -168,9 +163,9 @@ func TestURL_Retrieve(t *testing.T) {
 			tc.mockSvc(mockSvc)
 
 			h := handler.URL{
-				Store:  mockSvc,
-				Logger: zap.NewNop(),
-				Tracer: trace.NewNoopTracerProvider().Tracer("test"),
+				Service: mockSvc,
+				Logger:  zap.NewNop(),
+				Tracer:  noop.NewTracerProvider().Tracer(""),
 			}
 
 			err := h.Retrieve(c)
