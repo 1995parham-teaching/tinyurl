@@ -15,7 +15,7 @@ import (
 
 // URL handles interaction with URLs.
 type URL struct {
-	Store  *urlsvc.URLSvc
+	Service  *urlsvc.URLSvc
 	Logger *zap.Logger
 	Tracer trace.Tracer
 }
@@ -47,7 +47,7 @@ func (h URL) Create(c echo.Context) error {
 	span.SetAttributes(attribute.String("url", rq.URL))
 
 	if rq.Name != "" {
-		err := h.Store.CreateWithKey(ctx, rq.Name, rq.URL, rq.Expire)
+		err := h.Service.CreateWithKey(ctx, rq.Name, rq.URL, rq.Expire)
 		if err != nil {
 			span.RecordError(err)
 			span.SetStatus(codes.Error, err.Error())
@@ -62,7 +62,7 @@ func (h URL) Create(c echo.Context) error {
 		return c.NoContent(http.StatusNoContent)
 	}
 
-	key, err := h.Store.Create(ctx, rq.URL, rq.Expire)
+	key, err := h.Service.Create(ctx, rq.URL, rq.Expire)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
@@ -81,7 +81,7 @@ func (h URL) Retrieve(c echo.Context) error {
 
 	key := c.Param("key")
 
-	url, err := h.Store.Visit(ctx, key)
+	url, err := h.Service.Visit(ctx, key)
 	if err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())

@@ -10,13 +10,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
-	"github.com/1995parham-teaching/tinyurl/internal/infra/http/handler"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	"go.uber.org/zap"
+
+	"github.com/1995parham-teaching/tinyurl/internal/domain/model/url"
+	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/handler"
 )
 
 type MockURLSvc struct {
@@ -33,9 +36,9 @@ func (m *MockURLSvc) CreateWithKey(ctx context.Context, key, longURL string, exp
 	return args.Error(0)
 }
 
-func (m *MockURLSvc) Visit(ctx context.Context, key string) (urlsvc.URL, error) {
+func (m *MockURLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 	args := m.Called(ctx, key)
-	return args.Get(0).(urlsvc.URL), args.Error(1)
+	return args.Get(0).(url.URL), args.Error(1)
 }
 
 func TestURL_Create(t *testing.T) {
@@ -98,7 +101,7 @@ func TestURL_Create(t *testing.T) {
 			h := handler.URL{
 				Store:  mockSvc,
 				Logger: zap.NewNop(),
-				Tracer: trace.NewNoopTracerProvider().Tracer("test"),
+				Tracer: noop.NewTracerProvider().Tracer("test"),
 			}
 
 			err := h.Create(c)
