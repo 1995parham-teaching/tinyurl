@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc *urlsvc.URLSvc) *echo.Echo {
+func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc urlsvc.URLSvc) *echo.Echo {
 	app := echo.New()
 
 	handler.Healthz{
@@ -22,9 +22,9 @@ func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, url
 	}.Register(app.Group(""))
 
 	handler.URL{
-		Logger: logger.Named("handler").Named("healthz"),
-		Tracer: tele.TraceProvider.Tracer("handler.healthz"),
-		Store:  urlSvc,
+		Logger:  logger.Named("handler").Named("healthz"),
+		Tracer:  tele.TraceProvider.Tracer("handler.healthz"),
+		Service: urlSvc,
 	}.Register(app.Group(""))
 
 	lc.Append(fx.Hook{
