@@ -33,7 +33,7 @@ func (h URL) Create(c echo.Context) error {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
 	}
 
 	err = rq.Validate()
@@ -41,7 +41,7 @@ func (h URL) Create(c echo.Context) error {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
 	}
 
 	span.SetAttributes(attribute.String("url", rq.URL))
@@ -53,10 +53,10 @@ func (h URL) Create(c echo.Context) error {
 			span.SetStatus(codes.Error, err.Error())
 
 			if errors.Is(err, urlsvc.ErrKeyAlreadyExists) {
-				return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+				return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
 			}
 
-			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).WithInternal(err)
 		}
 
 		return c.NoContent(http.StatusNoContent)
@@ -67,7 +67,7 @@ func (h URL) Create(c echo.Context) error {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).WithInternal(err)
 	}
 
 	return c.JSON(http.StatusOK, key)
