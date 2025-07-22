@@ -19,21 +19,27 @@ var (
 	ErrURLNotFound      = urlrepo.ErrURLNotFound
 )
 
-type URLSvc struct {
+type URLSvc interface {
+	Create(ctx context.Context, address string, expire *time.Time) (string, error)
+	CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error
+	Visit(ctx context.Context, key string) (url.URL, error)
+}
+
+type urlSvc struct {
 	repo   urlrepo.Repository
 	logger *zap.Logger
 	gen    generator.Generator
 }
 
-func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Generator) *URLSvc {
-	return &URLSvc{
+func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Generator) URLSvc {
+	return &urlSvc{
 		gen:    gen,
 		repo:   repo,
 		logger: logger.Named("urlsvc"),
 	}
 }
 
-func (s *URLSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
+func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
 	key := s.gen.ShortURLKey()
 
 	err := s.create(ctx, key, address, expire)
@@ -48,7 +54,7 @@ func (s *URLSvc) Create(ctx context.Context, address string, expire *time.Time) 
 	return key, nil
 }
 
-func (s *URLSvc) CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error {
+func (s *urlSvc) CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error {
 	key = "static_" + key
 
 	err := s.create(ctx, key, address, expire)
@@ -63,7 +69,7 @@ func (s *URLSvc) CreateWithKey(ctx context.Context, key string, address string, 
 	return nil
 }
 
-func (s *URLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
+func (s *urlSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 	url, err := s.visit(ctx, key)
 	if err != nil {
 		return url, err
@@ -80,7 +86,7 @@ func (s *URLSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 	return url, nil
 }
 
-func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
+func (s *urlSvc) visit(ctx context.Context, key string) (url.URL, error) {
 	{
 		url, err := s.repo.FromShortURL(ctx, key)
 		if err != nil {
@@ -104,7 +110,7 @@ func (s *URLSvc) visit(ctx context.Context, key string) (url.URL, error) {
 	return url, nil
 }
 
-func (s *URLSvc) create(ctx context.Context, key string, address string, expire *time.Time) error {
+func (s *urlSvc) create(ctx context.Context, key string, address string, expire *time.Time) error {
 	valid := true
 
 	if expire == nil {
