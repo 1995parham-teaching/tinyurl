@@ -71,30 +71,45 @@ func TestURL_Create(t *testing.T) {
 			body: `{"url": "http://example.com", "name": "custom-key"}`,
 			mockSvc: func(m *MockURLSvc) {
 				m.On("CreateWithKey",
-				mock.Anything,
-				"custom-key",
-				"http://example.com",
-				mock.AnythingOfType("*time.Time"),
-			).Return(nil)
+					mock.Anything,
+					"custom-key",
+					"http://example.com",
+					mock.AnythingOfType("*time.Time"),
+				).Return(nil)
 			},
 			expectedStatusCode: http.StatusNoContent,
 			hasError:           false,
-			expectedBody: "",
+			expectedBody:       "",
 		},
 		{
 			name: "duplicate key",
 			body: `{"url": "http://example.com", "name": "duplicate-key"}`,
 			mockSvc: func(m *MockURLSvc) {
 				m.On("CreateWithKey",
-				mock.Anything,
-				"duplicate-key",
-				"http://example.com",
-				mock.AnythingOfType("*time.Time"),
-			).Return(urlsvc.ErrKeyAlreadyExists)
+					mock.Anything,
+					"duplicate-key",
+					"http://example.com",
+					mock.AnythingOfType("*time.Time"),
+				).Return(urlsvc.ErrKeyAlreadyExists)
 			},
 			expectedStatusCode: http.StatusBadRequest,
 			hasError:           true,
-			expectedBody: "",
+			expectedBody:       "",
+		},
+		{
+			name: "internal error",
+			body: `{"url": "http://example.com", "name": "internal-error"}`,
+			mockSvc: func(m *MockURLSvc) {
+				m.On("CreateWithKey",
+					mock.Anything,
+					"internal-error",
+					"http://example.com",
+					mock.AnythingOfType("*time.Time"),
+				).Return(errors.New("internal error")) // nolint: err113
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+			hasError:           true,
+			expectedBody:       "",
 		},
 		{
 			name:               "invalid request body",
@@ -102,7 +117,7 @@ func TestURL_Create(t *testing.T) {
 			mockSvc:            func(m *MockURLSvc) {},
 			expectedStatusCode: http.StatusBadRequest,
 			hasError:           true,
-			expectedBody: "",
+			expectedBody:       "",
 		},
 	}
 
@@ -165,7 +180,7 @@ func TestURL_Retrieve(t *testing.T) {
 		mockSvc            func(*MockURLSvc)
 		expectedStatusCode int
 		expectedLocation   string
-		hasError bool
+		hasError           bool
 	}{
 		{
 			name: "success",
@@ -175,7 +190,7 @@ func TestURL_Retrieve(t *testing.T) {
 			},
 			expectedStatusCode: http.StatusFound,
 			expectedLocation:   "http://example.com",
-			hasError: false,
+			hasError:           false,
 		},
 		{
 			name: "not found",
@@ -184,8 +199,8 @@ func TestURL_Retrieve(t *testing.T) {
 				m.On("Visit", mock.Anything, "not-found-key").Return(url.URL{}, urlsvc.ErrURLNotFound) // nolint: exhaustruct
 			},
 			expectedStatusCode: http.StatusNotFound,
-			expectedLocation: "",
-			hasError: true,
+			expectedLocation:   "",
+			hasError:           true,
 		},
 	}
 
