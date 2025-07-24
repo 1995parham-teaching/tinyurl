@@ -170,6 +170,36 @@ func TestURL_Create(t *testing.T) {
 	}
 }
 
+func TestURL_Create_InvalidContent(t *testing.T) {
+	t.Parallel()
+
+	require := require.New(t)
+
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodPost, "/urls", strings.NewReader("{ url: https://github.com }"))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	mockSvc := new(MockURLSvc)
+
+	h := handler.URL{
+		Service: mockSvc,
+		Logger:  zap.NewNop(),
+		Tracer:  noop.NewTracerProvider().Tracer(""),
+	}
+
+	err := h.Create(c)
+
+	require.Error(err)
+
+	var he *echo.HTTPError
+
+	errors.As(err, &he)
+	require.Equal(http.StatusBadRequest, he.Code)
+}
+
 // nolint: funlen
 func TestURL_Retrieve(t *testing.T) {
 	t.Parallel()
