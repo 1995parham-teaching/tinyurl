@@ -112,6 +112,20 @@ func TestURL_Create(t *testing.T) {
 			expectedBody:       "",
 		},
 		{
+			name: "internal error",
+			body: `{"url": "http://example.com"}`,
+			mockSvc: func(m *MockURLSvc) {
+				m.On("Create",
+					mock.Anything,
+					"http://example.com",
+					mock.AnythingOfType("*time.Time"),
+				).Return("", errors.New("internal error")) // nolint: err113
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+			hasError:           true,
+			expectedBody:       "",
+		},
+		{
 			name:               "invalid request body",
 			body:               `{"url": ""}`,
 			mockSvc:            func(m *MockURLSvc) {},
