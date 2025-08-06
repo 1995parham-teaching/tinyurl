@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	ariga.io/atlas-go-sdk v0.7.2
-	ariga.io/atlas-provider-gorm v0.5.5
+	ariga.io/atlas-provider-gorm v0.5.4
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/knadh/koanf/parsers/toml v0.1.0
@@ -35,7 +35,6 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.36.2-0.20250801020723-2aaaf0682dd9 // indirect
 	atomicgo.dev/cursor v0.2.0 // indirect
 	atomicgo.dev/keyboard v0.2.9 // indirect
 	atomicgo.dev/schedule v0.1.0 // indirect
