@@ -12,10 +12,11 @@ update:
 # set up the dev environment with docker-compose
 dev cmd *flags:
     #!/usr/bin/env bash
-    set -euxo pipefail
+    echo '{{ BOLD + YELLOW }}Development environment based on docker-compose{{ NORMAL }}'
+    set -eu
+    set -o pipefail
     if [ {{ cmd }} = 'down' ]; then
-      docker compose -f ./deployments/docker-compose.yml down --remove-orphans
-      docker compose -f ./deployments/docker-compose.yml rm
+      docker compose -f ./deployments/docker-compose.yml down --volumes --remove-orphans
     elif [ {{ cmd }} = 'up' ]; then
       docker compose -f ./deployments/docker-compose.yml up --wait -d {{ flags }}
     else
