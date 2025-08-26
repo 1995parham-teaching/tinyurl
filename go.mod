@@ -3,7 +3,6 @@ module github.com/1995parham-teaching/tinyurl
 go 1.24
 
 require (
-	ariga.io/atlas-go-sdk v0.7.2
 	ariga.io/atlas-provider-gorm v0.5.6
 	github.com/carlmjohnson/versioninfo v0.22.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
@@ -16,7 +15,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/pterm/pterm v0.12.81
 	github.com/spf13/cobra v1.9.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	github.com/tidwall/pretty v1.2.1
 	go.opentelemetry.io/otel v1.37.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.37.0
@@ -83,6 +82,7 @@ require (
 	github.com/prometheus/otlptranslator v0.0.1 // indirect
 	github.com/prometheus/procfs v0.17.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
