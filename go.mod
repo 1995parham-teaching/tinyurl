@@ -14,7 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/prometheus/client_golang v1.23.0
 	github.com/pterm/pterm v0.12.81
-	github.com/spf13/cobra v1.9.1
+	github.com/spf13/cobra v1.9.2-0.20250831231508-51d675196729
 	github.com/stretchr/testify v1.11.1
 	github.com/tidwall/pretty v1.2.1
 	go.opentelemetry.io/otel v1.38.0
