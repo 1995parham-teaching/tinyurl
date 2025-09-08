@@ -30,7 +30,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.43.0
 	gorm.io/driver/postgres v1.6.0
-	gorm.io/gorm v1.30.2
+	gorm.io/gorm v1.30.5
 )
 
 require (
@@ -113,7 +113,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	github.com/zeebo/errs v1.4.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.38.0 // indirect
