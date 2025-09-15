@@ -10,7 +10,7 @@ require (
 	github.com/knadh/koanf/providers/env v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/providers/structs v1.0.0
-	github.com/knadh/koanf/v2 v2.2.2
+	github.com/knadh/koanf/v2 v2.3.0
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/pterm/pterm v0.12.81
@@ -113,7 +113,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	github.com/zeebo/errs v1.4.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.38.0 // indirect
