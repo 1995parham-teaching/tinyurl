@@ -1,6 +1,6 @@
 module github.com/1995parham-teaching/tinyurl
 
-go 1.24.6
+go 1.25
 
 require (
 	ariga.io/atlas-provider-gorm v0.6.0
