@@ -22,16 +22,16 @@ import (
 type Config struct {
 	fx.Out
 
-	Logger    logger.Config    `json:"logger,omitempty"    koanf:"logger"`
-	Generator generator.Config `json:"generator,omitempty" koanf:"generator"`
-	Database  db.Config        `json:"database,omitempty"  koanf:"database"`
-	Telemetry telemetry.Config `json:"telemetry,omitempty" koanf:"telemetry"`
+	Logger    logger.Config    `json:"logger"    koanf:"logger"`
+	Generator generator.Config `json:"generator" koanf:"generator"`
+	Database  db.Config        `json:"database"  koanf:"database"`
+	Telemetry telemetry.Config `json:"telemetry" koanf:"telemetry"`
 }
 
 // prefix indicates environment variables prefix.
 const prefix = "tinyurl_"
 
-// New reads configuration with koanf.
+// Provide reads configuration with koanf.
 func Provide() Config {
 	k := koanf.New(".")
 
