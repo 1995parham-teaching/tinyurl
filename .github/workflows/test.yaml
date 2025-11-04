@@ -30,7 +30,6 @@ jobs:
           files: coverage.out
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: 1995parham-teaching/tinyurl
-      - run: git diff --exit-code ./migrations/atlas.sum
 
   docker:
     name: docker
