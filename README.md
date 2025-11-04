@@ -25,7 +25,7 @@ In this project, I aim to explore and demonstrate the outcomes of several such a
 - **Metrics with [`otel`](https://github.com/open-telemetry/opentelemetry-go) (OpenTelemetry):** Instrumenting code to collect and report metrics.
 - **Tracing with [`otel`](https://github.com/open-telemetry/opentelemetry-go) (OpenTelemetry):** Capturing the flow and latency of operations in our application.
 - **Dependency Injection using [`fx`](https://github.com/uber-go/fx):** A framework for dependency injection providing a robust way of managing dependencies.
-- **Migrations using [`atlasgo`](https://atlasgo.io/):** Managing database schema migrations in an agile manner.
+- **Migrations using [`goose`](https://github.com/pressly/goose):** Managing database schema migrations with embedded SQL files.
 
 ## Packaging
 
