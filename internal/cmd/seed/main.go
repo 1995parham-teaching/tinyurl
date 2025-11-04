@@ -36,8 +36,7 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 	}
 
 	for _, record := range records {
-		err := repo.Create(ctx, record)
-		if err != nil {
+		if err := repo.Create(ctx, record); err != nil {
 			if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
 				continue
 			}

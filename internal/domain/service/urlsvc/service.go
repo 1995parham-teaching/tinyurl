@@ -42,8 +42,7 @@ func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Ge
 func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
 	key := s.gen.ShortURLKey()
 
-	err := s.create(ctx, key, address, expire)
-	if err != nil {
+	if err := s.create(ctx, key, address, expire); err != nil {
 		if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
 			return "", ErrKeyGenFailed
 		}
@@ -57,8 +56,7 @@ func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) 
 func (s *urlSvc) CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error {
 	key = "static_" + key
 
-	err := s.create(ctx, key, address, expire)
-	if err != nil {
+	if err := s.create(ctx, key, address, expire); err != nil {
 		if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
 			return ErrKeyAlreadyExists
 		}
@@ -78,8 +76,7 @@ func (s *urlSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 	// we can use transaction here but number of visits is not accurate number.
 	url.Visits++
 
-	err = s.repo.Update(ctx, url)
-	if err != nil {
+	if err := s.repo.Update(ctx, url); err != nil {
 		s.logger.Error("updating url visit coount failed", zap.Error(err))
 	}
 
@@ -129,8 +126,7 @@ func (s *urlSvc) create(ctx context.Context, key string, address string, expire 
 		},
 	}
 
-	err := s.repo.Create(ctx, url)
-	if err != nil {
+	if err := s.repo.Create(ctx, url); err != nil {
 		return fmt.Errorf("url creation failed %w", err)
 	}
 

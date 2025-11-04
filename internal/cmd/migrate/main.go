@@ -17,48 +17,48 @@ const dialect = "postgres"
 
 // Register migrate commands.
 func Register(root *cobra.Command) {
-	migrateCmd := &cobra.Command{
+	migrateCmd := &cobra.Command{ // nolint: exhaustruct
 		Use:   "migrate",
 		Short: "Database migration commands using Goose",
 	}
 
 	migrateCmd.AddCommand(
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "up",
 			Short: "Migrate the DB to the most recent version available",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateUp)
 			},
 		},
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "up-by-one",
 			Short: "Migrate the DB up by 1",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateUpByOne)
 			},
 		},
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "down",
 			Short: "Roll back the version by 1",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateDown)
 			},
 		},
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "reset",
 			Short: "Roll back all migrations",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateReset)
 			},
 		},
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "status",
 			Short: "Dump the migration status for the current DB",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateStatus)
 			},
 		},
-		&cobra.Command{
+		&cobra.Command{ // nolint: exhaustruct
 			Use:   "version",
 			Short: "Print the current version of the database",
 			Run: func(_ *cobra.Command, _ []string) {
@@ -82,7 +82,7 @@ func runMigration(fn migrationFunc) {
 	).Run()
 }
 
-func setupGoose(logger *zap.Logger, database *db.DB) error {
+func setupGoose(logger *zap.Logger, _ *db.DB) error {
 	logger.Info("setting up goose migration")
 
 	goose.SetBaseFS(migrations.FS)

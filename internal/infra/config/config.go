@@ -36,34 +36,30 @@ func Provide() Config {
 	k := koanf.New(".")
 
 	// load default configuration from default function
-	err := k.Load(structs.Provider(Default(), "koanf"), nil)
-	if err != nil {
+	if err := k.Load(structs.Provider(Default(), "koanf"), nil); err != nil {
 		log.Fatalf("error loading default: %s", err)
 	}
 
 	// load configuration from file
-	err = k.Load(file.Provider("config.toml"), toml.Parser())
-	if err != nil {
+	if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
 		log.Printf("error loading config.toml: %s", err)
 	}
 
 	// load environment variables
-	err = k.Load(
+	if err := k.Load(
 		env.Provider(prefix, ".", func(source string) string {
 			base := strings.ToLower(strings.TrimPrefix(source, prefix))
 
 			return strings.ReplaceAll(base, "__", ".")
 		}),
 		nil,
-	)
-	if err != nil {
+	); err != nil {
 		log.Printf("error loading environment variables: %s", err)
 	}
 
 	var instance Config
 
-	err = k.Unmarshal("", &instance)
-	if err != nil {
+	if err := k.Unmarshal("", &instance); err != nil {
 		log.Fatalf("error unmarshalling config: %s", err)
 	}
 
