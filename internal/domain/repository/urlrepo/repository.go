@@ -16,4 +16,5 @@ type Repository interface {
 	Create(ctx context.Context, url url.URL) error
 	Update(ctx context.Context, url url.URL) error
 	FromShortURL(ctx context.Context, key string) (url.URL, error)
+	IncrementVisits(ctx context.Context, key string) error
 }

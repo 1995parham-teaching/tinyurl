@@ -73,12 +73,12 @@ func (s *urlSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 		return url, err
 	}
 
-	// we can use transaction here but number of visits is not accurate number.
-	url.Visits++
-
-	if err := s.repo.Update(ctx, url); err != nil {
-		s.logger.Error("updating url visit coount failed", zap.Error(err))
+	// use atomic increment to avoid race conditions
+	if err := s.repo.IncrementVisits(ctx, url.Key); err != nil {
+		s.logger.Error("incrementing url visit count failed", zap.Error(err))
 	}
+
+	url.Visits++
 
 	return url, nil
 }

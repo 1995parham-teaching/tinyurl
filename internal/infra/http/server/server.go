@@ -22,8 +22,8 @@ func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, url
 	}.Register(app.Group(""))
 
 	handler.URL{
-		Logger:  logger.Named("handler").Named("healthz"),
-		Tracer:  tele.TraceProvider.Tracer("handler.healthz"),
+		Logger:  logger.Named("handler").Named("url"),
+		Tracer:  tele.TraceProvider.Tracer("handler.url"),
 		Service: urlSvc,
 	}.Register(app.Group(""))
 

@@ -21,7 +21,7 @@ type URLDB struct {
 	db     *db.DB
 	logger *zap.Logger
 
-	responeTime metric.Float64Histogram
+	responseTime metric.Float64Histogram
 }
 
 func ProvideURLDB(db *db.DB, tele telemetry.Telemetery, logger *zap.Logger) *URLDB {
@@ -34,8 +34,8 @@ func ProvideURLDB(db *db.DB, tele telemetry.Telemetery, logger *zap.Logger) *URL
 
 	return &URLDB{
 		db:          db,
-		responeTime: rt,
-		logger:      logger.Named("repository.urldb"),
+		responseTime: rt,
+		logger:       logger.Named("repository.urldb"),
 	}
 }
 
@@ -48,7 +48,7 @@ func (r *URLDB) Create(ctx context.Context, url url.URL) error {
 		return fmt.Errorf("url creation failed %w", err)
 	}
 
-	r.responeTime.Record(
+	r.responseTime.Record(
 		ctx,
 		time.Since(start).Seconds(),
 		metric.WithAttributes(
@@ -78,7 +78,7 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 		return url, fmt.Errorf("fetching url from database failed %w", err)
 	}
 
-	r.responeTime.Record(
+	r.responseTime.Record(
 		ctx,
 		time.Since(start).Seconds(),
 		metric.WithAttributes(
@@ -98,11 +98,38 @@ func (r *URLDB) Update(ctx context.Context, url url.URL) error {
 		return fmt.Errorf("updating url failed %w", err)
 	}
 
-	r.responeTime.Record(
+	r.responseTime.Record(
 		ctx,
 		time.Since(start).Seconds(),
 		metric.WithAttributes(
 			attribute.String(logtag.Operation, "update"),
+		),
+	)
+
+	return nil
+}
+
+func (r *URLDB) IncrementVisits(ctx context.Context, key string) error {
+	start := time.Now()
+
+	result := r.db.DB.WithContext(ctx).Model(&url.URL{}).Where("key = ?", key).
+		UpdateColumn("visits", gorm.Expr("visits + ?", 1))
+
+	if result.Error != nil {
+		r.logger.Error("incrementing visits failed", zap.Error(result.Error), zap.String(logtag.Operation, "increment-visits"))
+
+		return fmt.Errorf("incrementing visits failed %w", result.Error)
+	}
+
+	if result.RowsAffected == 0 {
+		return urlrepo.ErrURLNotFound
+	}
+
+	r.responseTime.Record(
+		ctx,
+		time.Since(start).Seconds(),
+		metric.WithAttributes(
+			attribute.String(logtag.Operation, "increment-visits"),
 		),
 	)
 
