@@ -112,11 +112,13 @@ func (r *URLDB) Update(ctx context.Context, url url.URL) error {
 func (r *URLDB) IncrementVisits(ctx context.Context, key string) error {
 	start := time.Now()
 
+	// nolint: exhaustruct
 	result := r.db.DB.WithContext(ctx).Model(&url.URL{}).Where("key = ?", key).
 		UpdateColumn("visits", gorm.Expr("visits + ?", 1))
 
 	if result.Error != nil {
-		r.logger.Error("incrementing visits failed", zap.Error(result.Error), zap.String(logtag.Operation, "increment-visits"))
+		r.logger.Error("incrementing visits failed",
+			zap.Error(result.Error), zap.String(logtag.Operation, "increment-visits"))
 
 		return fmt.Errorf("incrementing visits failed %w", result.Error)
 	}

@@ -13,7 +13,9 @@ import (
 	"go.uber.org/zap"
 )
 
-func Provide(lc fx.Lifecycle, cfg Config, logger *zap.Logger, tele telemetry.Telemetery, urlSvc urlsvc.URLSvc) *echo.Echo {
+func Provide(
+	lc fx.Lifecycle, cfg Config, logger *zap.Logger, tele telemetry.Telemetery, urlSvc urlsvc.URLSvc,
+) *echo.Echo {
 	app := echo.New()
 
 	handler.Healthz{
