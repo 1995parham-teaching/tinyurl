@@ -105,7 +105,9 @@ func migrateUp(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
 
 	logger.Info("migrations completed successfully")
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 func migrateUpByOne(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
@@ -119,7 +121,9 @@ func migrateUpByOne(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowne
 
 	logger.Info("migration completed successfully")
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 func migrateDown(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
@@ -133,7 +137,9 @@ func migrateDown(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) 
 
 	logger.Info("migration rolled back successfully")
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 func migrateReset(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
@@ -147,7 +153,9 @@ func migrateReset(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner)
 
 	logger.Info("all migrations rolled back successfully")
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 func migrateStatus(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
@@ -159,7 +167,9 @@ func migrateStatus(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner
 		logger.Fatal("failed to get migration status", zap.Error(err))
 	}
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 func migrateVersion(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
@@ -174,5 +184,7 @@ func migrateVersion(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowne
 
 	logger.Info("current database version", zap.Int64("version", version))
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }

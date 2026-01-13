@@ -5,6 +5,7 @@ import (
 
 	"github.com/1995parham-teaching/tinyurl/internal/infra/db"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/server"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"go.uber.org/fx"
@@ -40,6 +41,9 @@ func Default() Config {
 				Enabled:  false,
 				Endpoint: "127.0.0.1:4317",
 			},
+		},
+		Server: server.Config{
+			Address: ":1378",
 		},
 	}
 }

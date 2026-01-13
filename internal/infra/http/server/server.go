@@ -13,7 +13,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, urlSvc urlsvc.URLSvc) *echo.Echo {
+func Provide(lc fx.Lifecycle, cfg Config, logger *zap.Logger, tele telemetry.Telemetery, urlSvc urlsvc.URLSvc) *echo.Echo {
 	app := echo.New()
 
 	handler.Healthz{
@@ -30,7 +30,7 @@ func Provide(lc fx.Lifecycle, logger *zap.Logger, tele telemetry.Telemetery, url
 	lc.Append(fx.Hook{
 		OnStart: func(_ context.Context) error {
 			go func() {
-				if err := app.Start(":1378"); !errors.Is(err, http.ErrServerClosed) {
+				if err := app.Start(cfg.Address); !errors.Is(err, http.ErrServerClosed) {
 					logger.Fatal("echo initiation failed", zap.Error(err))
 				}
 			}()

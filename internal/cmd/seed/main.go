@@ -45,7 +45,9 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 		}
 	}
 
-	_ = shutdowner.Shutdown()
+	if err := shutdowner.Shutdown(); err != nil {
+		logger.Error("shutdown failed", zap.Error(err))
+	}
 }
 
 // Register seed command.

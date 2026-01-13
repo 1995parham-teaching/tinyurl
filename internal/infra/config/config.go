@@ -7,6 +7,7 @@ import (
 
 	"github.com/1995parham-teaching/tinyurl/internal/infra/db"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/http/server"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"github.com/knadh/koanf/parsers/toml"
@@ -26,6 +27,7 @@ type Config struct {
 	Generator generator.Config `json:"generator" koanf:"generator"`
 	Database  db.Config        `json:"database"  koanf:"database"`
 	Telemetry telemetry.Config `json:"telemetry" koanf:"telemetry"`
+	Server    server.Config    `json:"server"    koanf:"server"`
 }
 
 // prefix indicates environment variables prefix.

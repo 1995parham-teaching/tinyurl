@@ -21,10 +21,12 @@ const PingTimeout = 10 * time.Second
 func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
 	// nolint: exhaustruct
 	db, err := gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{
-		// enable prepared statements and caching them globally
+		// PrepareStmt enables prepared statement caching globally for better performance.
 		PrepareStmt: true,
-		// gorm performs write operations insides a transaction to ensure data consistency.
-		// which is bad for performance.
+		// SkipDefaultTransaction controls whether GORM wraps write operations in transactions.
+		// When false (current): Each Create/Update/Delete runs in a transaction for data consistency.
+		// When true: Transactions are skipped for better performance, but at the cost of consistency.
+		// For this application, we prioritize data consistency over raw performance.
 		SkipDefaultTransaction: false,
 	})
 	if err != nil {
