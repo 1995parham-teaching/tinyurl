@@ -54,11 +54,9 @@ func TestURLValidation(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		expire := new(time.Time)
-
-		*expire = c.expire
-		if c.expire.IsZero() {
-			expire = nil
+		var expire *time.Time
+		if !c.expire.IsZero() {
+			expire = new(c.expire)
 		}
 
 		rq := request.URL{

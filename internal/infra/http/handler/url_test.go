@@ -160,9 +160,8 @@ func TestURL_Create(t *testing.T) {
 			if tc.hasError {
 				require.Error(err)
 
-				var he *echo.HTTPError
-
-				errors.As(err, &he)
+				he, ok := errors.AsType[*echo.HTTPError](err)
+				require.True(ok)
 				require.Equal(tc.expectedStatusCode, he.Code)
 			} else {
 				require.NoError(err)
@@ -208,9 +207,8 @@ func TestURL_Create_InvalidContent(t *testing.T) {
 
 	require.Error(err)
 
-	var he *echo.HTTPError
-
-	errors.As(err, &he)
+	he, ok := errors.AsType[*echo.HTTPError](err)
+	require.True(ok)
 	require.Equal(http.StatusBadRequest, he.Code)
 }
 
@@ -274,9 +272,8 @@ func TestURL_Retrieve(t *testing.T) {
 			if tc.hasError {
 				require.Error(err)
 
-				var he *echo.HTTPError
-
-				errors.As(err, &he)
+				he, ok := errors.AsType[*echo.HTTPError](err)
+				require.True(ok)
 				require.Equal(tc.expectedStatusCode, he.Code)
 			} else {
 				require.NoError(err)
