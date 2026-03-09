@@ -141,7 +141,7 @@ func TestURL_Create(t *testing.T) {
 			require := require.New(t)
 
 			e := echo.New()
-			req := httptest.NewRequest(http.MethodPost, "/urls", strings.NewReader(tc.body))
+			req := httptest.NewRequestWithContext(t.Context(), http.MethodPost, "/urls", strings.NewReader(tc.body))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
 			rec := httptest.NewRecorder()
@@ -189,7 +189,7 @@ func TestURL_Create_InvalidContent(t *testing.T) {
 	require := require.New(t)
 
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/urls", strings.NewReader("{ url: https://github.com }"))
+	req := httptest.NewRequestWithContext(t.Context(), http.MethodPost, "/urls", strings.NewReader("{ url: https://github.com }"))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
 	rec := httptest.NewRecorder()
