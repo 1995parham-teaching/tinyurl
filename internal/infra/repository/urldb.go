@@ -18,7 +18,7 @@ import (
 )
 
 type URLDB struct {
-	db     *db.DB
+	db     gorm.Interface[url.URL]
 	logger *zap.Logger
 
 	responseTime metric.Float64Histogram
@@ -33,16 +33,16 @@ func ProvideURLDB(db *db.DB, tele telemetry.Telemetery, logger *zap.Logger) *URL
 	}
 
 	return &URLDB{
-		db:          db,
+		db:           gorm.G[url.URL](db.DB),
 		responseTime: rt,
 		logger:       logger.Named("repository.urldb"),
 	}
 }
 
-func (r *URLDB) Create(ctx context.Context, url url.URL) error {
+func (r *URLDB) Create(ctx context.Context, u url.URL) error {
 	start := time.Now()
 
-	if err := r.db.DB.WithContext(ctx).Save(&url).Error; err != nil {
+	if err := r.db.Create(ctx, &u); err != nil {
 		r.logger.Error("url creation failed", zap.Error(err), zap.String(logtag.Operation, "create"))
 
 		return fmt.Errorf("url creation failed %w", err)
@@ -62,20 +62,19 @@ func (r *URLDB) Create(ctx context.Context, url url.URL) error {
 func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 	start := time.Now()
 
-	var url url.URL
-
-	if err := r.db.DB.WithContext(ctx).Where("key = ?", key).First(&url).Error; err != nil {
+	result, err := r.db.Where("key = ?", key).First(ctx)
+	if err != nil {
 		r.logger.Error("fetching url from database failed", zap.Error(err), zap.String(logtag.Operation, "from-short-url"))
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return url, urlrepo.ErrURLNotFound
+			return result, urlrepo.ErrURLNotFound
 		}
 
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return url, urlrepo.ErrDuplicateShortURL
+			return result, urlrepo.ErrDuplicateShortURL
 		}
 
-		return url, fmt.Errorf("fetching url from database failed %w", err)
+		return result, fmt.Errorf("fetching url from database failed %w", err)
 	}
 
 	r.responseTime.Record(
@@ -86,13 +85,13 @@ func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 		),
 	)
 
-	return url, nil
+	return result, nil
 }
 
-func (r *URLDB) Update(ctx context.Context, url url.URL) error {
+func (r *URLDB) Update(ctx context.Context, u url.URL) error {
 	start := time.Now()
 
-	if err := r.db.DB.WithContext(ctx).Save(url).Error; err != nil {
+	if _, err := r.db.Where("key = ?", u.Key).Updates(ctx, u); err != nil {
 		r.logger.Error("updating url failed", zap.Error(err), zap.String(logtag.Operation, "update"))
 
 		return fmt.Errorf("updating url failed %w", err)
@@ -112,18 +111,15 @@ func (r *URLDB) Update(ctx context.Context, url url.URL) error {
 func (r *URLDB) IncrementVisits(ctx context.Context, key string) error {
 	start := time.Now()
 
-	// nolint: exhaustruct
-	result := r.db.DB.WithContext(ctx).Model(&url.URL{}).Where("key = ?", key).
-		UpdateColumn("visits", gorm.Expr("visits + ?", 1))
-
-	if result.Error != nil {
+	rowsAffected, err := r.db.Where("key = ?", key).Update(ctx, "visits", gorm.Expr("visits + ?", 1))
+	if err != nil {
 		r.logger.Error("incrementing visits failed",
-			zap.Error(result.Error), zap.String(logtag.Operation, "increment-visits"))
+			zap.Error(err), zap.String(logtag.Operation, "increment-visits"))
 
-		return fmt.Errorf("incrementing visits failed %w", result.Error)
+		return fmt.Errorf("incrementing visits failed %w", err)
 	}
 
-	if result.RowsAffected == 0 {
+	if rowsAffected == 0 {
 		return urlrepo.ErrURLNotFound
 	}
 
