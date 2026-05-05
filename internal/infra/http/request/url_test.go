@@ -11,6 +11,8 @@ import (
 func TestURLValidation(t *testing.T) {
 	t.Parallel()
 
+	const validURL = "http://www.hello.com"
+
 	cases := []struct {
 		url     string
 		expire  time.Time
@@ -33,21 +35,21 @@ func TestURLValidation(t *testing.T) {
 			isValid: false,
 		},
 		{
-			url:     "http://www.hello.com",
+			url:     validURL,
 			isValid: true,
 		},
 		{
-			url:     "http://www.hello.com",
+			url:     validURL,
 			expire:  time.Now().Add(time.Second),
 			isValid: false,
 		},
 		{
-			url:     "http://www.hello.com",
+			url:     validURL,
 			expire:  time.Now().Add(time.Hour),
 			isValid: true,
 		},
 		{
-			url:     "http://www.hello.com",
+			url:     validURL,
 			expire:  time.Now().Add(-time.Second),
 			isValid: false,
 		},
