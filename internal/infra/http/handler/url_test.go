@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -257,8 +257,7 @@ func TestURL_Retrieve(t *testing.T) {
 			req := httptest.NewRequestWithContext(t.Context(), http.MethodGet, "/"+tc.key, nil)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
-			c.SetParamNames("key")
-			c.SetParamValues(tc.key)
+			c.SetPathValues(echo.PathValues{{Name: "key", Value: tc.key}})
 
 			mockSvc := new(MockURLSvc)
 			tc.mockSvc(mockSvc)

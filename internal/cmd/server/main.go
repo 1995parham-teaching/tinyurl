@@ -10,7 +10,7 @@ import (
 	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/repository"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 	"github.com/spf13/cobra"

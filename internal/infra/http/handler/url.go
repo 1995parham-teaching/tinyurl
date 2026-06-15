@@ -6,7 +6,7 @@ import (
 
 	"github.com/1995parham-teaching/tinyurl/internal/domain/service/urlsvc"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/http/request"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -22,7 +22,7 @@ type URL struct {
 
 // Create generates short URL and save it on database.
 // nolint: wrapcheck
-func (h URL) Create(c echo.Context) error {
+func (h URL) Create(c *echo.Context) error {
 	ctx, span := h.Tracer.Start(c.Request().Context(), "handler.url.create")
 	defer span.End()
 
@@ -32,14 +32,14 @@ func (h URL) Create(c echo.Context) error {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).Wrap(err)
 	}
 
 	if err := rq.Validate(); err != nil {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error()).Wrap(err)
 	}
 
 	span.SetAttributes(attribute.String("url", rq.URL))
@@ -50,10 +50,10 @@ func (h URL) Create(c echo.Context) error {
 			span.SetStatus(codes.Error, err.Error())
 
 			if errors.Is(err, urlsvc.ErrKeyAlreadyExists) {
-				return echo.NewHTTPError(http.StatusBadRequest, err.Error()).WithInternal(err)
+				return echo.NewHTTPError(http.StatusBadRequest, err.Error()).Wrap(err)
 			}
 
-			return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).WithInternal(err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).Wrap(err)
 		}
 
 		return c.NoContent(http.StatusNoContent)
@@ -64,7 +64,7 @@ func (h URL) Create(c echo.Context) error {
 		span.RecordError(err)
 		span.SetStatus(codes.Error, err.Error())
 
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).WithInternal(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error()).Wrap(err)
 	}
 
 	return c.JSON(http.StatusOK, key)
@@ -72,7 +72,7 @@ func (h URL) Create(c echo.Context) error {
 
 // Retrieve retrieves URL for given short URL and redirect to it.
 // nolint: wrapcheck
-func (h URL) Retrieve(c echo.Context) error {
+func (h URL) Retrieve(c *echo.Context) error {
 	ctx, span := h.Tracer.Start(c.Request().Context(), "handler.url.retrieve")
 	defer span.End()
 
