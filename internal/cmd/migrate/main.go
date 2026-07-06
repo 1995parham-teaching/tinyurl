@@ -1,6 +1,7 @@
 package migrate
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/1995parham-teaching/tinyurl/internal/infra/config"
@@ -12,8 +13,6 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
-
-const dialect = "postgres"
 
 // Register migrate commands.
 func Register(root *cobra.Command) {
@@ -82,25 +81,35 @@ func runMigration(fn migrationFunc) {
 	).Run()
 }
 
-func setupGoose(logger *zap.Logger, _ *db.DB) error {
-	logger.Info("setting up goose migration")
-
-	goose.SetBaseFS(migrations.FS)
-
-	if err := goose.SetDialect(dialect); err != nil {
-		return fmt.Errorf("failed to set dialect: %w", err)
+func newGooseProvider(database *db.DB) (*goose.Provider, error) {
+	provider, err := goose.NewProvider(goose.DialectPostgres, database.SQL, migrations.FS)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create goose provider: %w", err)
 	}
 
-	return nil
+	return provider, nil
+}
+
+func closeGooseProvider(logger *zap.Logger, provider *goose.Provider) {
+	if err := provider.Close(); err != nil {
+		logger.Error("failed to close goose provider", zap.Error(err))
+	}
 }
 
 func migrateUp(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	if err := goose.Up(database.SQL, "."); err != nil {
+	results, err := provider.Up(context.Background())
+	if err != nil {
 		logger.Fatal("failed to run migrations", zap.Error(err))
+	}
+
+	for _, result := range results {
+		logger.Info(result.String())
 	}
 
 	logger.Info("migrations completed successfully")
@@ -111,14 +120,18 @@ func migrateUp(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
 }
 
 func migrateUpByOne(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	if err := goose.UpByOne(database.SQL, "."); err != nil {
+	result, err := provider.UpByOne(context.Background())
+	if err != nil {
 		logger.Fatal("failed to run migration", zap.Error(err))
 	}
 
+	logger.Info(result.String())
 	logger.Info("migration completed successfully")
 
 	if err := shutdowner.Shutdown(); err != nil {
@@ -127,14 +140,18 @@ func migrateUpByOne(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowne
 }
 
 func migrateDown(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	if err := goose.Down(database.SQL, "."); err != nil {
+	result, err := provider.Down(context.Background())
+	if err != nil {
 		logger.Fatal("failed to rollback migration", zap.Error(err))
 	}
 
+	logger.Info(result.String())
 	logger.Info("migration rolled back successfully")
 
 	if err := shutdowner.Shutdown(); err != nil {
@@ -143,12 +160,19 @@ func migrateDown(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) 
 }
 
 func migrateReset(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	if err := goose.Reset(database.SQL, "."); err != nil {
+	results, err := provider.DownTo(context.Background(), 0)
+	if err != nil {
 		logger.Fatal("failed to reset migrations", zap.Error(err))
+	}
+
+	for _, result := range results {
+		logger.Info(result.String())
 	}
 
 	logger.Info("all migrations rolled back successfully")
@@ -159,12 +183,23 @@ func migrateReset(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner)
 }
 
 func migrateStatus(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	if err := goose.Status(database.SQL, "."); err != nil {
+	statuses, err := provider.Status(context.Background())
+	if err != nil {
 		logger.Fatal("failed to get migration status", zap.Error(err))
+	}
+
+	for _, status := range statuses {
+		logger.Info("migration status",
+			zap.String("source", status.Source.Path),
+			zap.String("state", string(status.State)),
+			zap.Time("applied_at", status.AppliedAt),
+		)
 	}
 
 	if err := shutdowner.Shutdown(); err != nil {
@@ -173,11 +208,13 @@ func migrateStatus(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner
 }
 
 func migrateVersion(logger *zap.Logger, database *db.DB, shutdowner fx.Shutdowner) {
-	if err := setupGoose(logger, database); err != nil {
+	provider, err := newGooseProvider(database)
+	if err != nil {
 		logger.Fatal("failed to setup goose", zap.Error(err))
 	}
+	defer closeGooseProvider(logger, provider)
 
-	version, err := goose.GetDBVersion(database.SQL)
+	version, err := provider.GetDBVersion(context.Background())
 	if err != nil {
 		logger.Fatal("failed to get database version", zap.Error(err))
 	}
