@@ -14,6 +14,10 @@ import (
 // errUnavailable stands in for a database that is not answering.
 var errUnavailable = errors.New("database is unavailable")
 
+// testURL is the target the tests shorten. Which url it is never matters, only that a lookup
+// gives back the same one that was stored.
+const testURL = "https://github.com"
+
 // fakeRepo is an in-memory repository that counts what reached it, so the decorators can be
 // tested by what they let through rather than by what they claim.
 type fakeRepo struct {

@@ -36,14 +36,14 @@ func TestCacheServesRepeatedReads(t *testing.T) {
 	t.Parallel()
 
 	next := newFakeRepo()
-	next.put("abc", "https://github.com", sql.NullTime{Time: time.Time{}, Valid: false})
+	next.put("abc", testURL, sql.NullTime{Time: time.Time{}, Valid: false})
 
 	cache := newCache(t, defaultCacheConfig(), next)
 
 	for range 10 {
 		record, err := cache.FromShortURL(t.Context(), "abc")
 		require.NoError(t, err)
-		require.Equal(t, "https://github.com", record.URL)
+		require.Equal(t, testURL, record.URL)
 	}
 
 	require.Equal(t, 1, next.readCount(), "only the first read should have reached the database")
@@ -79,7 +79,7 @@ func TestCacheForgetsMissesQuickly(t *testing.T) {
 	_, err := cache.FromShortURL(t.Context(), "soon")
 	require.ErrorIs(t, err, urlrepo.ErrURLNotFound)
 
-	next.put("soon", "https://github.com", sql.NullTime{Time: time.Time{}, Valid: false})
+	next.put("soon", testURL, sql.NullTime{Time: time.Time{}, Valid: false})
 
 	require.Eventually(t, func() bool {
 		_, err := cache.FromShortURL(t.Context(), "soon")
@@ -102,14 +102,14 @@ func TestCacheCreateClearsMiss(t *testing.T) {
 	// nolint: exhaustruct
 	require.NoError(t, cache.Create(t.Context(), url.URL{
 		Key:    "gh",
-		URL:    "https://github.com",
+		URL:    testURL,
 		Visits: 0,
 		Expire: sql.NullTime{Time: time.Time{}, Valid: false},
 	}))
 
 	record, err := cache.FromShortURL(t.Context(), "gh")
 	require.NoError(t, err)
-	require.Equal(t, "https://github.com", record.URL)
+	require.Equal(t, testURL, record.URL)
 }
 
 // TestCacheDoesNotOutliveExpiry is the correctness constraint on the whole layer: the database
@@ -121,7 +121,7 @@ func TestCacheDoesNotOutliveExpiry(t *testing.T) {
 	cfg.TTL = time.Hour
 
 	next := newFakeRepo()
-	next.put("brief", "https://github.com", sql.NullTime{
+	next.put("brief", testURL, sql.NullTime{
 		Time:  time.Now().Add(20 * time.Millisecond),
 		Valid: true,
 	})

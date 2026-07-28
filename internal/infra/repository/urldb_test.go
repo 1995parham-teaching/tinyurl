@@ -73,7 +73,7 @@ func (s *URLDBTestSuite) TestCreate() {
 	// nolint: exhaustruct
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "random",
-		URL:    "https://github.com",
+		URL:    testURL,
 		Visits: 0,
 		Expire: sql.NullTime{
 			Time:  time.Now(),
@@ -85,7 +85,7 @@ func (s *URLDBTestSuite) TestCreate() {
 	url, err := s.repo.FromShortURL(context.Background(), "random")
 	require.NoError(err)
 
-	require.Equal("https://github.com", url.URL)
+	require.Equal(testURL, url.URL)
 	require.False(url.Expire.Valid)
 }
 
@@ -98,7 +98,7 @@ func (s *URLDBTestSuite) TestDuplicateKey() {
 	// nolint: exhaustruct
 	record := url.URL{
 		Key:    "taken",
-		URL:    "https://github.com",
+		URL:    testURL,
 		Visits: 0,
 		Expire: sql.NullTime{Time: time.Now(), Valid: false},
 	}
@@ -119,7 +119,7 @@ func (s *URLDBTestSuite) TestExpired() {
 	// nolint: exhaustruct
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "expired",
-		URL:    "https://github.com",
+		URL:    testURL,
 		Visits: 0,
 		Expire: sql.NullTime{
 			Time:  created.Add(time.Hour),
@@ -139,7 +139,7 @@ func (s *URLDBTestSuite) TestNotExpired() {
 	// nolint: exhaustruct
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "fresh",
-		URL:    "https://github.com",
+		URL:    testURL,
 		Visits: 0,
 		Expire: sql.NullTime{
 			Time:  time.Now().Add(time.Hour),
@@ -149,7 +149,7 @@ func (s *URLDBTestSuite) TestNotExpired() {
 
 	record, err := s.repo.FromShortURL(context.Background(), "fresh")
 	require.NoError(err)
-	require.Equal("https://github.com", record.URL)
+	require.Equal(testURL, record.URL)
 }
 
 // TestIncrementVisitsBatch covers the statement that folds a whole batch of counters into one
@@ -157,36 +157,42 @@ func (s *URLDBTestSuite) TestNotExpired() {
 func (s *URLDBTestSuite) TestIncrementVisitsBatch() {
 	require := s.Require()
 
-	for _, key := range []string{"one", "two"} {
+	const (
+		first  = "one"
+		second = "two"
+		// a key that no longer exists must not fail the batch, since a url may be removed
+		// between a visit being counted and the batch reaching the database.
+		removed = "gone"
+	)
+
+	for _, key := range []string{first, second} {
 		// nolint: exhaustruct
 		require.NoError(s.repo.Create(context.Background(), url.URL{
 			Key:    key,
-			URL:    "https://github.com",
+			URL:    testURL,
 			Visits: 0,
 			Expire: sql.NullTime{Time: time.Now(), Valid: false},
 		}))
 	}
 
 	require.NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{
-		"one": 7,
-		"two": 3,
-		// a key that no longer exists must not fail the batch, since a url may be removed
-		// between a visit being counted and the batch reaching the database.
-		"gone": 5,
+		first:   7,
+		second:  3,
+		removed: 5,
 	}))
 
-	one, err := s.repo.FromShortURL(context.Background(), "one")
+	one, err := s.repo.FromShortURL(context.Background(), first)
 	require.NoError(err)
 	require.Equal(uint64(7), one.Visits)
 
-	two, err := s.repo.FromShortURL(context.Background(), "two")
+	two, err := s.repo.FromShortURL(context.Background(), second)
 	require.NoError(err)
 	require.Equal(uint64(3), two.Visits)
 
 	// batches accumulate rather than overwrite.
-	require.NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{"one": 2}))
+	require.NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{first: 2}))
 
-	one, err = s.repo.FromShortURL(context.Background(), "one")
+	one, err = s.repo.FromShortURL(context.Background(), first)
 	require.NoError(err)
 	require.Equal(uint64(9), one.Visits)
 }
