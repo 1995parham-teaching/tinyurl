@@ -99,3 +99,29 @@ so the prefix bought a second query and nothing else.
 
 ## The Read Path
 
+Generating keys is the interesting problem; serving redirects is the one that decides whether the service
+stays up. A shortener reads far more than it writes, and the naive implementation of a redirect manages to
+be both a read and a write: it looks the url up, then increments a counter on the row it just found. The
+busiest links therefore contend on their own row, and every read costs a write.
+
+Two decorators around the repository fix that, configured under `repository`. Both implement the same
+interface as the layer they wrap, so either can be switched off and nothing else changes.
+
+- **`repository.Cached`** answers lookups from an in-process LRU. What a redirect needs — the target of a
+  key — never changes once written, so the only real question is when to stop trusting an entry. Entries
+  lapse at `ttl`, or at the url's own expiry if that comes first, so a cached url can never outlive the
+  point where the database would have stopped returning it. Misses are remembered too, for the much shorter
+  `negative_ttl`, because keys this short invite being guessed at; creating a key clears any miss recorded
+  for it.
+- **`repository.BufferedVisits`** counts visits in memory and folds them into one statement every
+  `flush_interval`, or sooner once `max_buffered` keys have piled up. A shutdown drains what is left. This
+  trades an exact, instantly visible counter — which nothing reads — for one write per batch instead of one
+  per redirect.
+
+Measured on the development setup, 200 redirects of the same key produce 2 `SELECT`s and no writes at all
+while they are being served, then a single batched `UPDATE` carrying all 200 counts.
+
+The caches are per instance, which is the honest limitation of both: a negative entry keeps one instance
+from seeing a key another instance just created until it lapses, and a crash loses at most one flush
+interval of counts. Neither is free to fix, and neither is worth fixing with a shared cache until there is
+more than one instance to disagree.

@@ -23,7 +23,7 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 
 	records := []url.URL{
 		{
-			Key:    "static_google",
+			Key:    "google",
 			URL:    "https://google.com",
 			Visits: 0,
 			Expire: sql.NullTime{
