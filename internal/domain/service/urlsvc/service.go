@@ -39,16 +39,19 @@ func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Ge
 	}
 }
 
-// MaxKeyGenAttempts bounds how many keys Create will try before giving up. The key space stays
-// sparse, so the expected number of attempts is 1/(1-load factor) — this is only ever reached
-// once the space is nearly full.
+// MaxKeyGenAttempts bounds how many keys Create will try before giving up. Generators that
+// build unique keys by construction never collide, and for random ones the expected number of
+// attempts is 1/(1-load factor) — so this is only ever reached once the key space is nearly full.
 const MaxKeyGenAttempts = 5
 
 func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
 	for attempt := range MaxKeyGenAttempts {
-		key := s.gen.ShortURLKey()
+		key, err := s.gen.ShortURLKey(ctx)
+		if err != nil {
+			return "", fmt.Errorf("short url key generation failed %w", err)
+		}
 
-		err := s.create(ctx, key, address, expire)
+		err = s.create(ctx, key, address, expire)
 		if err == nil {
 			return key, nil
 		}

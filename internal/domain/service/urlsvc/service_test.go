@@ -44,10 +44,10 @@ type countingGenerator struct {
 	calls int
 }
 
-func (g *countingGenerator) ShortURLKey() string {
+func (g *countingGenerator) ShortURLKey(context.Context) (string, error) {
 	g.calls++
 
-	return fmt.Sprintf("key-%d", g.calls)
+	return fmt.Sprintf("key-%d", g.calls), nil
 }
 
 func newService(repo urlrepo.Repository, gen *countingGenerator) urlsvc.URLSvc {

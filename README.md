@@ -52,3 +52,36 @@ ensuring a separation of concerns between our domain definitions and infrastruct
 
 - The actual implementations carry a `db` prefix, indicating their direct interaction with the database
   and their role within the infrastructure layer.
+
+## Key Generation
+
+Handing out a short key that nobody else holds is the one problem a url shortener cannot avoid,
+and there is more than one way to solve it. The `generator` package implements four, behind a single
+interface, so they can be compared by changing `generator.type` in the configuration.
+
+| Type      | Where uniqueness comes from                | Keys are     |
+| --------- | ------------------------------------------ | ------------ |
+| `simple`  | the primary key on `urls`, plus a retry    | random, guessable |
+| `secure`  | the primary key on `urls`, plus a retry    | random, unguessable |
+| `counter` | a database sequence, by construction       | sequential, enumerable |
+| `feistel` | a database sequence, by construction       | scattered, unguessable |
+
+The random generators make no promise of their own. They draw a key, the primary key on `urls` rejects it
+if it is taken, and the service draws another — up to `urlsvc.MaxKeyGenAttempts` times. This holds up
+because the key space stays sparse: with N keys stored, a fresh one collides with probability N/`Space`,
+and the expected number of attempts is 1/(1-load factor). `simple` draws from `math/rand` and `secure`
+from `crypto/rand`; only the latter produces keys a stranger cannot guess.
+
+The counting generators never collide at all. `counter` encodes a Postgres sequence in base62, so distinct
+identifiers give distinct keys and there is nothing to check and nothing to retry. Its weakness is that
+consecutive keys are adjacent, so holding one lets anybody walk the rest.
+
+`feistel` fixes that without giving up the guarantee. It pushes the identifier through a keyed
+[Feistel network](https://en.wikipedia.org/wiki/Feistel_cipher) before encoding it. A Feistel network is a
+bijection whatever its round function computes, so distinct identifiers still give distinct keys, while
+consecutive ones land far apart. It requires `generator.key` to be set; that secret is what makes the
+permutation unguessable, and it deliberately has no default.
+
+The sequence behind both counting generators is declared with a cache, so each database session claims a
+block of identifiers up front and spends none of them on coordination — the same idea as a hand written
+Hi/Lo allocator. The cost is gaps in the numbering, which cost nothing but key space.

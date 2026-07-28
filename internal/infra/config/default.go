@@ -17,7 +17,8 @@ func Default() Config {
 	return Config{
 		Out: fx.Out{},
 		Generator: generator.Config{
-			Type: "simple",
+			Type: generator.TypeSimple,
+			Key:  "",
 		},
 		Logger: logger.Config{
 			Level: "debug",
