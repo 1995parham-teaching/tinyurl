@@ -45,6 +45,12 @@ func (r *URLDB) Create(ctx context.Context, u url.URL) error {
 	if err := r.db.Create(ctx, &u); err != nil {
 		r.logger.Error("url creation failed", zap.Error(err), zap.String(logtag.Operation, "create"))
 
+		// the primary key on urls.key is what actually guarantees short url uniqueness,
+		// so a unique violation here means the key is taken and the caller must pick another.
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return urlrepo.ErrDuplicateShortURL
+		}
+
 		return fmt.Errorf("url creation failed %w", err)
 	}
 
@@ -62,16 +68,14 @@ func (r *URLDB) Create(ctx context.Context, u url.URL) error {
 func (r *URLDB) FromShortURL(ctx context.Context, key string) (url.URL, error) {
 	start := time.Now()
 
-	result, err := r.db.Where("key = ?", key).First(ctx)
+	// expiry is filtered in the query rather than by the caller so that an expired url is
+	// indistinguishable from a missing one and no call site can forget to check it.
+	result, err := r.db.Where("key = ? AND (expire IS NULL OR expire > now())", key).First(ctx)
 	if err != nil {
 		r.logger.Error("fetching url from database failed", zap.Error(err), zap.String(logtag.Operation, "from-short-url"))
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return result, urlrepo.ErrURLNotFound
-		}
-
-		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return result, urlrepo.ErrDuplicateShortURL
 		}
 
 		return result, fmt.Errorf("fetching url from database failed %w", err)
@@ -133,3 +137,4 @@ func (r *URLDB) IncrementVisits(ctx context.Context, key string) error {
 
 	return nil
 }
+

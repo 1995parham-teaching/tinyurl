@@ -28,6 +28,10 @@ func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
 		// When true: Transactions are skipped for better performance, but at the cost of consistency.
 		// For this application, we prioritize data consistency over raw performance.
 		SkipDefaultTransaction: false,
+		// TranslateError makes the driver map database specific errors onto GORM's portable
+		// sentinels. Without it a unique violation arrives as a raw *pgconn.PgError and
+		// errors.Is(err, gorm.ErrDuplicatedKey) never matches.
+		TranslateError: true,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("cannot open connection to the database %w", err)

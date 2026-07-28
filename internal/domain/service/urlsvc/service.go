@@ -39,18 +39,29 @@ func ProvideURLSvc(repo urlrepo.Repository, logger *zap.Logger, gen generator.Ge
 	}
 }
 
-func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
-	key := s.gen.ShortURLKey()
+// MaxKeyGenAttempts bounds how many keys Create will try before giving up. The key space stays
+// sparse, so the expected number of attempts is 1/(1-load factor) — this is only ever reached
+// once the space is nearly full.
+const MaxKeyGenAttempts = 5
 
-	if err := s.create(ctx, key, address, expire); err != nil {
-		if errors.Is(err, urlrepo.ErrDuplicateShortURL) {
-			return "", ErrKeyGenFailed
+func (s *urlSvc) Create(ctx context.Context, address string, expire *time.Time) (string, error) {
+	for attempt := range MaxKeyGenAttempts {
+		key := s.gen.ShortURLKey()
+
+		err := s.create(ctx, key, address, expire)
+		if err == nil {
+			return key, nil
 		}
 
-		return "", err
+		if !errors.Is(err, urlrepo.ErrDuplicateShortURL) {
+			return "", err
+		}
+
+		s.logger.Warn("short url key already taken, generating another one",
+			zap.String("key", key), zap.Int("attempt", attempt+1))
 	}
 
-	return key, nil
+	return "", ErrKeyGenFailed
 }
 
 func (s *urlSvc) CreateWithKey(ctx context.Context, key string, address string, expire *time.Time) error {
