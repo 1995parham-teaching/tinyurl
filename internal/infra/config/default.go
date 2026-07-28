@@ -7,6 +7,7 @@ import (
 	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/http/server"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/repository"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"go.uber.org/fx"
 )
@@ -30,6 +31,19 @@ func Default() Config {
 			MaxOpenConns:    10,
 			ConnMaxIdleTime: 10 * time.Second,
 			ConnMaxLifetime: 10 * time.Second,
+		},
+		Repository: repository.Config{
+			Cache: repository.CacheConfig{
+				Enabled:     true,
+				Size:        100_000,
+				TTL:         10 * time.Minute,
+				NegativeTTL: 5 * time.Second,
+			},
+			Visits: repository.VisitsConfig{
+				Enabled:       true,
+				FlushInterval: 5 * time.Second,
+				MaxBuffered:   10_000,
+			},
 		},
 		Telemetry: telemetry.Config{
 			Namespace:   "1995parham-teaching",

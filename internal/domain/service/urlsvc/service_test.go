@@ -34,6 +34,8 @@ func (r *takenRepo) Update(context.Context, url.URL) error { return nil }
 
 func (r *takenRepo) IncrementVisits(context.Context, string) error { return nil }
 
+func (r *takenRepo) IncrementVisitsBatch(context.Context, map[string]uint64) error { return nil }
+
 func (r *takenRepo) FromShortURL(context.Context, string) (url.URL, error) {
 	// nolint: exhaustruct
 	return url.URL{}, urlrepo.ErrURLNotFound

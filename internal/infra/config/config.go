@@ -9,6 +9,7 @@ import (
 	"github.com/1995parham-teaching/tinyurl/internal/infra/generator"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/http/server"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/logger"
+	"github.com/1995parham-teaching/tinyurl/internal/infra/repository"
 	"github.com/1995parham-teaching/tinyurl/internal/infra/telemetry"
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/env"
@@ -23,11 +24,12 @@ import (
 type Config struct {
 	fx.Out
 
-	Logger    logger.Config    `json:"logger"    koanf:"logger"`
-	Generator generator.Config `json:"generator" koanf:"generator"`
-	Database  db.Config        `json:"database"  koanf:"database"`
-	Telemetry telemetry.Config `json:"telemetry" koanf:"telemetry"`
-	Server    server.Config    `json:"server"    koanf:"server"`
+	Logger     logger.Config     `json:"logger"     koanf:"logger"`
+	Generator  generator.Config  `json:"generator"  koanf:"generator"`
+	Database   db.Config         `json:"database"   koanf:"database"`
+	Repository repository.Config `json:"repository" koanf:"repository"`
+	Telemetry  telemetry.Config  `json:"telemetry"  koanf:"telemetry"`
+	Server     server.Config     `json:"server"     koanf:"server"`
 }
 
 // prefix indicates environment variables prefix.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/1995parham-teaching/tinyurl/internal/domain/model/url"
@@ -138,3 +139,52 @@ func (r *URLDB) IncrementVisits(ctx context.Context, key string) error {
 	return nil
 }
 
+// batchVisitsQuery folds a whole batch of counters into a single statement. The deltas travel
+// as a VALUES list that is joined against urls, so the cost of recording a thousand visits is
+// one round trip rather than a thousand. The casts are needed because postgres has no other
+// way to know what type an otherwise untyped parameter of a VALUES list holds.
+const batchVisitsQuery = `UPDATE urls
+SET visits = COALESCE(urls.visits, 0) + visited.delta
+FROM (VALUES %s) AS visited(key, delta)
+WHERE urls.key = visited.key`
+
+func (r *URLDB) IncrementVisitsBatch(ctx context.Context, deltas map[string]uint64) error {
+	if len(deltas) == 0 {
+		return nil
+	}
+
+	start := time.Now()
+
+	// each row of the VALUES list contributes a key and a delta.
+	const argsPerRow = 2
+
+	rows := make([]string, 0, len(deltas))
+	args := make([]any, 0, len(deltas)*argsPerRow)
+
+	for key, delta := range deltas {
+		rows = append(rows, "(?::text, ?::bigint)")
+		args = append(args, key, delta)
+	}
+
+	query := fmt.Sprintf(batchVisitsQuery, strings.Join(rows, ", "))
+
+	if err := r.db.Exec(ctx, query, args...); err != nil {
+		r.logger.Error("incrementing visits in batch failed",
+			zap.Error(err), zap.String(logtag.Operation, "increment-visits-batch"))
+
+		return fmt.Errorf("incrementing visits in batch failed %w", err)
+	}
+
+	// rows that no longer exist simply do not match, which is not an error: a url may well be
+	// removed between a visit being counted and the batch reaching the database.
+
+	r.responseTime.Record(
+		ctx,
+		time.Since(start).Seconds(),
+		metric.WithAttributes(
+			attribute.String(logtag.Operation, "increment-visits-batch"),
+		),
+	)
+
+	return nil
+}

@@ -152,6 +152,49 @@ func (s *URLDBTestSuite) TestNotExpired() {
 	require.Equal("https://github.com", record.URL)
 }
 
+// TestIncrementVisitsBatch covers the statement that folds a whole batch of counters into one
+// round trip, which is the only place the VALUES join is exercised against a real database.
+func (s *URLDBTestSuite) TestIncrementVisitsBatch() {
+	require := s.Require()
+
+	for _, key := range []string{"one", "two"} {
+		// nolint: exhaustruct
+		require.NoError(s.repo.Create(context.Background(), url.URL{
+			Key:    key,
+			URL:    "https://github.com",
+			Visits: 0,
+			Expire: sql.NullTime{Time: time.Now(), Valid: false},
+		}))
+	}
+
+	require.NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{
+		"one": 7,
+		"two": 3,
+		// a key that no longer exists must not fail the batch, since a url may be removed
+		// between a visit being counted and the batch reaching the database.
+		"gone": 5,
+	}))
+
+	one, err := s.repo.FromShortURL(context.Background(), "one")
+	require.NoError(err)
+	require.Equal(uint64(7), one.Visits)
+
+	two, err := s.repo.FromShortURL(context.Background(), "two")
+	require.NoError(err)
+	require.Equal(uint64(3), two.Visits)
+
+	// batches accumulate rather than overwrite.
+	require.NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{"one": 2}))
+
+	one, err = s.repo.FromShortURL(context.Background(), "one")
+	require.NoError(err)
+	require.Equal(uint64(9), one.Visits)
+}
+
+func (s *URLDBTestSuite) TestIncrementVisitsBatchEmpty() {
+	s.Require().NoError(s.repo.IncrementVisitsBatch(context.Background(), map[string]uint64{}))
+}
+
 func TestURLDB(t *testing.T) {
 	t.Parallel()
 

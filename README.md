@@ -85,3 +85,17 @@ permutation unguessable, and it deliberately has no default.
 The sequence behind both counting generators is declared with a cache, so each database session claims a
 block of identifiers up front and spends none of them on coordination — the same idea as a hand written
 Hi/Lo allocator. The cost is gaps in the numbering, which cost nothing but key space.
+
+### One Key Space
+
+Names chosen by a caller and keys produced by a generator live in the same key space, stored exactly as
+the caller will type them. Nothing keeps the two apart because nothing needs to: the primary key rejects a
+name that is taken, and a generated key that happens to land on a claimed name is simply regenerated.
+
+Chosen names used to be stored behind a `static_` prefix instead. That guaranteed separation, but it meant
+the key that was stored was not the key anybody typed, so every lookup of a chosen name spent one query
+failing to find the typed key before trying the prefixed one. Uniqueness was already guaranteed elsewhere,
+so the prefix bought a second query and nothing else.
+
+## The Read Path
+

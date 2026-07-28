@@ -87,12 +87,15 @@ func (s *urlSvc) Visit(ctx context.Context, key string) (url.URL, error) {
 		return url, err
 	}
 
-	// use atomic increment to avoid race conditions
+	// counting a visit must never keep a redirect waiting, and must never fail one either: the
+	// repository decides whether that means a write now or a counter folded into a later batch.
 	if err := s.repo.IncrementVisits(ctx, url.Key); err != nil {
 		s.logger.Error("incrementing url visit count failed", zap.Error(err))
 	}
 
-	url.Visits++
+	// the visit count is deliberately returned as it was read. Counts are batched and reads are
+	// cached, so anything computed here would be a guess dressed up as a total; nothing serves
+	// this field, and a caller who needs the real number should ask the database for it.
 
 	return url, nil
 }
