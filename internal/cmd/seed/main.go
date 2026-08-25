@@ -53,7 +53,7 @@ func main(logger *zap.Logger, repo urlrepo.Repository, shutdowner fx.Shutdowner)
 // Register seed command.
 func Register(root *cobra.Command) {
 	root.AddCommand(
-		//nolint: exhaustruct
+		//nolint: exhaustruct_v5
 		&cobra.Command{
 			Use:   "seed",
 			Short: "Add sample records into database",

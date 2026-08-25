@@ -16,48 +16,48 @@ import (
 
 // Register migrate commands.
 func Register(root *cobra.Command) {
-	migrateCmd := &cobra.Command{ // nolint: exhaustruct
+	migrateCmd := &cobra.Command{ // nolint: exhaustruct_v5
 		Use:   "migrate",
 		Short: "Database migration commands using Goose",
 	}
 
 	migrateCmd.AddCommand(
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "up",
 			Short: "Migrate the DB to the most recent version available",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateUp)
 			},
 		},
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "up-by-one",
 			Short: "Migrate the DB up by 1",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateUpByOne)
 			},
 		},
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "down",
 			Short: "Roll back the version by 1",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateDown)
 			},
 		},
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "reset",
 			Short: "Roll back all migrations",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateReset)
 			},
 		},
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "status",
 			Short: "Dump the migration status for the current DB",
 			Run: func(_ *cobra.Command, _ []string) {
 				runMigration(migrateStatus)
 			},
 		},
-		&cobra.Command{ // nolint: exhaustruct
+		&cobra.Command{ // nolint: exhaustruct_v5
 			Use:   "version",
 			Short: "Print the current version of the database",
 			Run: func(_ *cobra.Command, _ []string) {
