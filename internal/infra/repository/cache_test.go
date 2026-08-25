@@ -99,7 +99,7 @@ func TestCacheCreateClearsMiss(t *testing.T) {
 	_, err := cache.FromShortURL(t.Context(), "gh")
 	require.ErrorIs(t, err, urlrepo.ErrURLNotFound)
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	require.NoError(t, cache.Create(t.Context(), url.URL{
 		Key:    "gh",
 		URL:    testURL,

@@ -54,7 +54,7 @@ func (r *takenRepo) FromShortURL(_ context.Context, key string) (url.URL, error)
 		return record, nil
 	}
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	return url.URL{}, urlrepo.ErrURLNotFound
 }
 

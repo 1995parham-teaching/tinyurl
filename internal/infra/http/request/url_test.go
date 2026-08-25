@@ -7,7 +7,7 @@ import (
 	"github.com/1995parham-teaching/tinyurl/internal/infra/http/request"
 )
 
-// nolint: funlen, exhaustruct
+// nolint: funlen, exhaustruct_v5
 func TestURLValidation(t *testing.T) {
 	t.Parallel()
 

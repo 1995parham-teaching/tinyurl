@@ -229,7 +229,7 @@ func TestURL_Retrieve(t *testing.T) {
 			name: "success",
 			key:  "test-key",
 			mockSvc: func(m *MockURLSvc) {
-				m.On("Visit", mock.Anything, "test-key").Return(url.URL{URL: "http://example.com"}, nil) // nolint: exhaustruct
+				m.On("Visit", mock.Anything, "test-key").Return(url.URL{URL: "http://example.com"}, nil) // nolint: exhaustruct_v5
 			},
 			expectedStatusCode: http.StatusFound,
 			expectedLocation:   "http://example.com",
@@ -239,7 +239,7 @@ func TestURL_Retrieve(t *testing.T) {
 			name: "not found",
 			key:  "not-found-key",
 			mockSvc: func(m *MockURLSvc) {
-				m.On("Visit", mock.Anything, "not-found-key").Return(url.URL{}, urlsvc.ErrURLNotFound) // nolint: exhaustruct
+				m.On("Visit", mock.Anything, "not-found-key").Return(url.URL{}, urlsvc.ErrURLNotFound) // nolint: exhaustruct_v5
 			},
 			expectedStatusCode: http.StatusNotFound,
 			expectedLocation:   "",

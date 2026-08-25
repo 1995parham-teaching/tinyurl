@@ -48,7 +48,7 @@ func (s *URLDBTestSuite) SetupSuite() {
 func (s *URLDBTestSuite) TearDownTest() {
 	require := s.Require()
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	stmt := &gorm.Statement{DB: s.db.DB}
 	require.NoError(stmt.Parse(new(url.URL)))
 
@@ -70,7 +70,7 @@ func (s *URLDBTestSuite) TestNotFound() {
 func (s *URLDBTestSuite) TestCreate() {
 	require := s.Require()
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "random",
 		URL:    testURL,
@@ -81,7 +81,7 @@ func (s *URLDBTestSuite) TestCreate() {
 		},
 	}))
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	url, err := s.repo.FromShortURL(context.Background(), "random")
 	require.NoError(err)
 
@@ -95,7 +95,7 @@ func (s *URLDBTestSuite) TestCreate() {
 func (s *URLDBTestSuite) TestDuplicateKey() {
 	require := s.Require()
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	record := url.URL{
 		Key:    "taken",
 		URL:    testURL,
@@ -116,7 +116,7 @@ func (s *URLDBTestSuite) TestExpired() {
 
 	created := time.Now().Add(-2 * time.Hour)
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "expired",
 		URL:    testURL,
@@ -136,7 +136,7 @@ func (s *URLDBTestSuite) TestExpired() {
 func (s *URLDBTestSuite) TestNotExpired() {
 	require := s.Require()
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	require.NoError(s.repo.Create(context.Background(), url.URL{
 		Key:    "fresh",
 		URL:    testURL,
@@ -166,7 +166,7 @@ func (s *URLDBTestSuite) TestIncrementVisitsBatch() {
 	)
 
 	for _, key := range []string{first, second} {
-		// nolint: exhaustruct
+		// nolint: exhaustruct_v5
 		require.NoError(s.repo.Create(context.Background(), url.URL{
 			Key:    key,
 			URL:    testURL,

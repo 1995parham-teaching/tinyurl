@@ -72,14 +72,14 @@ func (r *fakeRepo) FromShortURL(_ context.Context, key string) (url.URL, error) 
 
 	record, ok := r.records[key]
 	if !ok {
-		// nolint: exhaustruct
+		// nolint: exhaustruct_v5
 		return url.URL{}, urlrepo.ErrURLNotFound
 	}
 
 	// the database refuses to return an expired url, and so must the fake, otherwise the cache
 	// would look correct while serving something the database would have withheld.
 	if record.Expire.Valid && time.Now().After(record.Expire.Time) {
-		// nolint: exhaustruct
+		// nolint: exhaustruct_v5
 		return url.URL{}, urlrepo.ErrURLNotFound
 	}
 
@@ -118,7 +118,7 @@ func (r *fakeRepo) put(key, address string, expire sql.NullTime) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	r.records[key] = url.URL{Key: key, URL: address, Visits: 0, Expire: expire}
 }
 
