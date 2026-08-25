@@ -116,7 +116,7 @@ func (s *urlSvc) create(ctx context.Context, key string, address string, expire 
 		valid = false
 	}
 
-	// nolint exhaustruct
+	// nolint: exhaustruct_v5
 	url := url.URL{
 		Key:    key,
 		URL:    address,
