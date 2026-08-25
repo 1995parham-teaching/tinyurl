@@ -13,3 +13,5 @@ linters:
     - revive
     - wrapcheck
     - noinlineerr
+    # replaced by exhaustruct_v5 since golangci-lint v2.13.0
+    - exhaustruct
