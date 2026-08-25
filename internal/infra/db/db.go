@@ -19,7 +19,7 @@ type DB struct {
 const PingTimeout = 10 * time.Second
 
 func Provide(cfg Config, logger *zap.Logger) (*DB, error) {
-	// nolint: exhaustruct
+	// nolint: exhaustruct_v5
 	db, err := gorm.Open(postgres.Open(cfg.DSN), &gorm.Config{
 		// PrepareStmt enables prepared statement caching globally for better performance.
 		PrepareStmt: true,

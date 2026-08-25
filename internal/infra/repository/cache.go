@@ -71,7 +71,7 @@ func (r *Cached) FromShortURL(ctx context.Context, key string) (url.URL, error) 
 		r.record(ctx, "hit")
 
 		if !cached.found {
-			// nolint: exhaustruct
+			// nolint: exhaustruct_v5
 			return url.URL{}, urlrepo.ErrURLNotFound
 		}
 

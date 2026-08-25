@@ -45,7 +45,7 @@ func Provide(
 			go func() {
 				defer close(done)
 
-				// nolint: exhaustruct
+				// nolint: exhaustruct_v5
 				sc := echo.StartConfig{
 					Address:         cfg.Address,
 					GracefulTimeout: gracefulTimeout,
