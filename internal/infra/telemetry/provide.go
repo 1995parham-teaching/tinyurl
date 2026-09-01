@@ -73,6 +73,7 @@ func setupMeterExporter(cfg Config) (metric.Reader, *http.Server) {
 		WriteTimeout:                 time.Second,
 		IdleTimeout:                  time.Second,
 		MaxHeaderBytes:               0,
+		MaxHeaderValueCount:          0,
 		TLSNextProto:                 nil,
 		ConnState:                    nil,
 		ErrorLog:                     nil,
@@ -80,6 +81,7 @@ func setupMeterExporter(cfg Config) (metric.Reader, *http.Server) {
 		ConnContext:                  nil,
 		HTTP2:                        nil,
 		Protocols:                    nil,
+		DisableClientPriority:        false,
 	}
 }
 
