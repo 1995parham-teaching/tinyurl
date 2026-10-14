@@ -13,7 +13,7 @@ require (
 	github.com/knadh/koanf/v2 v2.3.7
 	github.com/labstack/echo/v5 v5.4.0
 	github.com/pressly/goose/v3 v3.28.0
-	github.com/prometheus/client_golang v1.24.1
+	github.com/prometheus/client_golang v1.25.0
 	github.com/pterm/pterm v0.12.83
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.12.1
