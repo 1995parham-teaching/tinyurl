@@ -49,4 +49,5 @@ jobs:
       - uses: docker/bake-action@v7
         with:
           files: "build/package/docker-bake.json"
-          push: true
+          # dependabot prs get a read-only token, so they only build the image
+          push: ${{ github.actor != 'dependabot[bot]' }}
