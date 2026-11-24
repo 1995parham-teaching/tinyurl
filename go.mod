@@ -71,7 +71,7 @@ require (
 	github.com/prometheus/common v0.74.0 // indirect
 	github.com/prometheus/otlptranslator v1.0.0 // indirect
 	github.com/prometheus/procfs v0.23.0 // indirect
-	github.com/sethvargo/go-retry v0.5.0 // indirect
+	github.com/sethvargo/go-retry v0.6.0 // indirect
 	github.com/spf13/pflag v1.1.0 // indirect
 	github.com/stretchr/objx v0.8.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.2 // indirect
@@ -91,3 +91,7 @@ require (
 	google.golang.org/grpc v1.85.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 )
+
+// go-retry v0.7.0 turns Backoff into a function, and goose v3.30.1 still uses
+// the interface. Drop this when goose supports v0.7.
+exclude github.com/sethvargo/go-retry v0.7.0
