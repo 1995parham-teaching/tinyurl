@@ -92,6 +92,4 @@ require (
 	google.golang.org/protobuf v1.36.12 // indirect
 )
 
-// go-retry v0.7.0 turns Backoff into a function, and goose v3.30.1 still uses
-// the interface. Drop this when goose supports v0.7.
 exclude github.com/sethvargo/go-retry v0.7.0
